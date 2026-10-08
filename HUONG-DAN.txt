@@ -1,0 +1,37 @@
+TRA CỨU GCN ĐĂNG KIỂM — Tác giả: Hưng.Vũ
+=========================================
+
+Thư mục này upload thẳng lên Cloudflare Pages là chạy.
+
+Gồm:
+  index.html     Giao diện (JS đã mã hoá / obfuscate)
+  _worker.js     Máy chủ API (gọi trang đăng kiểm phía server -> không bị CORS)
+  wrangler.toml  Cấu hình (chỉ dùng nếu deploy bằng lệnh)
+  HUONG-DAN.txt  File này (đã bị chặn, người dùng không xem được qua web)
+
+CÁCH 1 — Kéo thả trên web (không cần cài gì)
+  1. Vào https://dash.cloudflare.com  >  Workers & Pages  >  Create  >  tab "Pages"
+  2. Chọn "Upload assets" (Use direct upload)
+  3. Đặt tên project, ví dụ: tra-cuu-dang-kiem  >  Create project
+  4. Kéo thả CẢ THƯ MỤC "tra-cuu-dang-kiem-cloudflare" (hoặc file .zip) vào ô upload
+  5. Deploy site  >  mở https://tra-cuu-dang-kiem.pages.dev
+  Cập nhật bản mới: vào project > Create new deployment > upload lại thư mục.
+
+CÁCH 2 — Dùng lệnh (nếu có Node.js)
+  cd tra-cuu-dang-kiem-cloudflare
+  npx wrangler login
+  npx wrangler pages deploy .
+
+KIỂM TRA SAU KHI DEPLOY
+  - Mở trang, tra thử 1 xe. Nếu báo "Không kết nối được máy chủ API" hoặc lỗi 404 ở
+    /api/v2/q  => file _worker.js chưa được nhận: deploy lại bằng CÁCH 2.
+  - Nếu báo lỗi từ máy chủ đăng kiểm (403/5xx, SSL) => trang đăng kiểm chặn IP Cloudflare;
+    khi đó dùng proxy-server.js chạy trên máy tại Việt Nam.
+
+BẢO MẬT TRUY CẬP (khuyến nghị)
+  Cloudflare Zero Trust > Access > Applications > Add (Self-hosted)
+  domain: tra-cuu-dang-kiem.pages.dev  > Policy: Emails ending in @opes.com.vn
+
+LƯU Ý
+  index.html và _worker.js dùng chung khoá mã hoá của cùng 1 lần build —
+  luôn upload cả thư mục, không thay lẻ từng file từ bản build khác.

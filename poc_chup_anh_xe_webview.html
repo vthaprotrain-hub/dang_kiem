@@ -167,6 +167,23 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
 .grp{font-size:15px;margin:18px 0 2px}
 #secData .grp:first-child{margin-top:4px}
 
+/* Ghi video bằng chứng */
+.rec{position:absolute;top:0;left:0;right:0;bottom:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;background:rgba(10,16,22,.8);color:#fff}
+.rec-dot{position:absolute;top:10px;right:10px;background:#A8231B;color:#fff;font-weight:700;font-size:12px;padding:4px 10px;border-radius:999px}
+.spin{width:44px;height:44px;margin-bottom:12px;border-radius:50%;border:4px solid rgba(255,255,255,.25);border-top-color:var(--accent);animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.spin{animation:none}}
+.rec-title{font-size:20px;font-weight:700;margin:0 0 4px}
+.rec-sub{font-size:14px;margin:0 0 12px;color:#D7E2EA}
+.rec-bar{width:280px;max-width:80%;height:8px;border-radius:4px;background:rgba(255,255,255,.25);overflow:hidden}
+.rec-bar div{height:100%;width:0;background:var(--accent)}
+.player{display:block;width:100%;max-height:60vh;margin:10px 0;background:var(--vf);border-radius:10px}
+.vitem{padding:10px 0;border-bottom:1px solid var(--line)}
+.vhead{font-weight:600}
+.vmeta{margin-top:2px;font-size:12px;color:var(--ink2);word-break:break-word}
+.vbtns{display:flex;flex-wrap:wrap;margin-top:8px}
+.vbtns .btn{width:auto;flex:1 1 90px;min-height:40px;margin:0 8px 0 0;padding:6px 10px;font-size:14px}
+
 /* Màn hình chặn */
 .gate{position:fixed;top:0;left:0;right:0;bottom:0;z-index:50;background:var(--bg);overflow:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top,0px) + 24px) 20px calc(env(safe-area-inset-bottom,0px) + 24px)}
 .gate-in{max-width:460px;margin:0 auto}
@@ -248,6 +265,13 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
       <div class="vf-empty" id="vfEmpty">Camera chưa bật. Nhấn “Bật camera” bên dưới.</div>
       <div class="vf-tag" id="vfTag" hidden></div>
       <div class="flash" id="flash"></div>
+      <div class="rec" id="rec" role="status" aria-live="polite" hidden>
+        <span class="rec-dot">● Đang ghi hình</span>
+        <div class="spin" aria-hidden="true"></div>
+        <p class="rec-title">Hệ thống đã xác thực ảnh</p>
+        <p class="rec-sub">Đang lưu bằng chứng 5 giây, vui lòng giữ nguyên máy. <span id="recLeft">Còn 5 giây</span></p>
+        <div class="rec-bar" aria-hidden="true"><div id="recFill"></div></div>
+      </div>
     </div>
 
     <div class="btnrow">
@@ -266,10 +290,20 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
     <div class="thumbs" id="thumbs"></div>
   </section>
 
+  <!-- ================= VIDEO BẰNG CHỨNG ================= -->
+  <section id="secVideo">
+    <h2>Nhật ký video bằng chứng</h2>
+    <p class="sub">Mỗi lần bấm “Chụp”, trang tự ghi thêm 5 giây video từ đúng lúc bấm. Video được nén (khoảng 0,6 đến 1,5 Mbps tuỳ độ phân giải) và lưu tạm trong IndexedDB của trình duyệt trên máy này, không gửi đi đâu.</p>
+    <p class="msg" id="vstore">Đang mở kho lưu trữ…</p>
+    <video id="player" class="player" controls playsinline hidden></video>
+    <div id="vlist"></div>
+    <div class="btnrow one"><button class="btn ghost" id="btnVClear" type="button" hidden>Xoá tất cả video</button></div>
+  </section>
+
   <!-- ================= ĐIỂM TIN CẬY ================= -->
   <section id="secTrust">
     <h2>Điểm tin cậy của ảnh chụp</h2>
-    <p class="sub">Chấm điểm từ các dấu hiệu đọc được trên thiết bị. Khi bật camera, trang sẽ xin thêm quyền cảm biến chuyển động và vị trí. Điểm chỉ mang tính tham khảo, dữ liệu nằm trên máy này và không được lưu hay gửi đi.</p>
+    <p class="sub">Chấm điểm từ các dấu hiệu đọc được trên thiết bị. Khi bật camera, trang sẽ xin thêm quyền cảm biến chuyển động và vị trí. Điểm chỉ mang tính tham khảo. Ảnh và dữ liệu chỉ nằm trong bộ nhớ trang; riêng video bằng chứng được lưu tạm trong IndexedDB trên máy này. Không có gì được gửi đi.</p>
     <div class="trust" id="trust" aria-live="polite">
       <div class="t-num"><span id="tNum">–</span><small>/ 100</small></div>
       <div class="v-body">
@@ -331,7 +365,7 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
   <section id="secGate">
     <h2>Thử màn hình chặn webview</h2>
     <p class="sub">Xem trước trải nghiệm khi người dùng mở trang trong Zalo hoặc app khác. Thêm <span class="mono">?block=1</span> vào đường dẫn để bật chặn ngay khi tải.</p>
-    <label class="check"><input type="checkbox" id="chkBlock"><span>Bật chặn khi phát hiện webview</span></label>
+    <label class="check"><input type="checkbox" id="chkBlock" checked><span>Bật chặn khi phát hiện webview</span></label>
     <label class="check"><input type="checkbox" id="chkForce"><span>Giả lập đang ở trong webview (để xem màn hình chặn trên trình duyệt thường)</span></label>
   </section>
 
@@ -693,12 +727,13 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
   function updateCamButtons() {
     var on = !!stream;
     $('btnCam').textContent = on ? 'Tắt camera' : 'Bật camera';
-    $('btnShot').disabled = !on;
+    $('btnShot').disabled = !on || rec.active;
     $('vfEmpty').hidden = on;
     $('btnFlip').textContent = 'Camera đang chọn: ' + (facing === 'environment' ? 'sau' : 'trước') + ' (nhấn để đổi)';
   }
 
   function stopCamera() {
+    frameStat.token++;
     if (stream) {
       try { var tr = stream.getTracks(); for (var i = 0; i < tr.length; i++) tr[i].stop(); } catch (e) {}
     }
@@ -712,6 +747,7 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
     if (!(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices)) return;
     navigator.mediaDevices.enumerateDevices().then(function (list) {
       var sel = $('devSel'); sel.innerHTML = '';
+      if (camInfo && !camInfo.error) { camInfo.devices = []; for (var q = 0; q < list.length; q++) camInfo.devices.push({ kind: list[q].kind, label: list[q].label || '', deviceId: shortId(list[q].deviceId), groupId: shortId(list[q].groupId) }); }
       var cams = [];
       for (var i = 0; i < list.length; i++) if (list[i].kind === 'videoinput') cams.push(list[i]);
       results.devices = [];
@@ -730,6 +766,7 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
 
   function failCamera(err) {
     var n = errName(err);
+    camInfo = { error: errDetail(err), attempts: camAttempts.slice(), at: new Date().toISOString() };
     results.camera = { ok: false, name: n, msg: friendly(n) };
     camMsg('Không bật được camera (' + n + '). ' + friendly(n), 'bad');
     log('Mở camera thất bại: ' + n, 'bad');
@@ -740,14 +777,16 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
     stopCamera();
     camMsg('Đang xin quyền camera… hãy chọn “Cho phép” nếu có hộp thoại hiện ra.', '');
     var t0 = Date.now();
+    camAttempts = [];
     var attempts = deviceId ? ['device', 'plain'] : ['facing', 'plain'];
     var idx = 0;
 
-    function onStream(s) {
+    function onStream(s, mode) {
       stream = s;
       camOnAt = performance.now();
       video.onloadedmetadata = function () {
         log('Đã nhận khung hình: ' + video.videoWidth + '×' + video.videoHeight, 'ok');
+        watchFrames();
       };
       try { video.srcObject = s; } catch (e) { try { video.src = window.URL.createObjectURL(s); } catch (e2) {} }
       video.setAttribute('playsinline', ''); video.setAttribute('webkit-playsinline', ''); video.muted = true;
@@ -757,6 +796,9 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
       } catch (e3) {}
       var tr = s.getVideoTracks()[0], st = {};
       try { st = tr.getSettings ? tr.getSettings() : {}; } catch (e4) {}
+      camInfo = buildCamInfo(s, tr, mode, t0);
+      log('Camera settings: ' + objSummary(camInfo.settings));
+      log('Camera capabilities: ' + (objSummary(camInfo.capabilities) || 'không cung cấp'));
       results.camera = { ok: true, label: tr.label || '', width: st.width, height: st.height, facing: st.facingMode || '', fps: st.frameRate || '', ms: Date.now() - t0 };
       camMsg('Camera đã bật' + (st.width ? ' (' + st.width + '×' + st.height + ')' : '') + '. Có thể chụp.', 'ok');
       log('Mở camera thành công sau ' + (Date.now() - t0) + ' ms' + (tr.label ? ' - ' + tr.label : ''), 'ok');
@@ -774,8 +816,10 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
       log('Gọi getUserMedia (' + mode + ')…');
       var pr;
       try { pr = getUM(buildConstraints(mode)); } catch (ex) { failCamera(ex); return; }
-      pr.then(onStream, function (err) {
+      pr.then(function (s) { onStream(s, mode); }, function (err) {
         var n = errName(err);
+        camAttempts.push({ mode: mode, error: errDetail(err) });
+        log('Chi tiết lỗi: ' + errDetail(err).message + (errDetail(err).constraint ? ' (ràng buộc ' + errDetail(err).constraint + ')' : ''), 'bad');
         log('getUserMedia (' + mode + ') lỗi: ' + n, 'bad');
         if (n === 'NotAllowedError' || n === 'PermissionDeniedError' || n === 'SecurityError' || n === 'NotFoundError' || n === 'NotSupportedError') failCamera(err);
         else tryNext(err);
@@ -808,6 +852,7 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
   function capture() {
     if (!stream || !video.videoWidth) { camMsg('Chưa có khung hình. Hãy bật camera và chờ hình hiện ra.', 'warn'); return; }
     var t0 = Date.now();
+    startRecording(currentSlot);
     var vw = video.videoWidth, vh = video.videoHeight, sc = Math.min(1, 1600 / Math.max(vw, vh));
     var w = Math.round(vw * sc), h = Math.round(vh * sc);
     var c = D.createElement('canvas'); c.width = w; c.height = h;
@@ -828,7 +873,8 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
       if (photos[key] && photos[key].blobUrl) { try { URL.revokeObjectURL(photos[key].url); } catch (e) {} }
       photos[key] = { url: url, blobUrl: url.indexOf('blob:') === 0, size: size, w: w, h: h, luma: luma,
         sig: sig, at: Date.now(), msCam: camOnAt ? Math.round(performance.now() - camOnAt) : null,
-        pointer: ptype, motion: motionStats(1500), loc: geoSnapshot(), hash: null };
+        pointer: ptype, motion: motionStats(1500), loc: geoSnapshot(), hash: null,
+        video: (rec.current && rec.current.key === key) ? rec.current : null };
       hashPhoto(photos[key], src);
       results.capture = { ok: true, w: w, h: h, size: size, luma: luma, ms: Date.now() - t0, count: countPhotos() };
       var f = $('flash'); f.className = 'flash'; void f.offsetWidth; f.className = 'flash on';
@@ -886,7 +932,7 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
       else ph.textContent = 'Chưa chụp';
       var cap = D.createElement('div'); cap.className = 'cap'; cap.textContent = s.n;
       var meta = D.createElement('div'); meta.className = 'meta mono';
-      meta.textContent = p ? (p.w + '×' + p.h + ' · ' + kb(p.size)) : ' ';
+      meta.textContent = p ? (p.w + '×' + p.h + ' · ' + kb(p.size) + ' · ' + clock(new Date(p.at)) + (p.video && p.video.state === 'recording' ? ' · đang ghi video' : (p.video && p.video.state === 'done' ? ' · có video' : ''))) : ' ';
       th.appendChild(ph); th.appendChild(cap); th.appendChild(meta);
     }
     $('count').textContent = countPhotos() + '/4 góc đã chụp';
@@ -921,9 +967,12 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
       out.appendChild(info);
       var verdict = D.createElement('div'); verdict.className = 'msg';
       if (age === null) { verdict.textContent = 'Không đọc được thời điểm tạo tệp.'; }
-      else if (age < 120) { verdict.className = 'msg ok'; verdict.textContent = 'Tệp mới tạo trong vòng 2 phút, nhiều khả năng vừa chụp. Chỉ mang tính tham khảo, iOS có thể làm lại mốc thời gian khi chọn từ thư viện.'; }
+      else if (age < 300) { verdict.className = 'msg ok'; verdict.textContent = 'Tệp mới tạo trong vòng 5 phút, nhiều khả năng vừa chụp. Chỉ mang tính tham khảo, iOS có thể làm lại mốc thời gian khi chọn từ thư viện.'; }
       else { verdict.className = 'msg warn'; verdict.textContent = 'Tệp được tạo từ trước, nhiều khả năng là ảnh có sẵn trong máy.'; }
       out.appendChild(verdict);
+      var tbox = D.createElement('div'); tbox.className = 'msg'; tbox.style.whiteSpace = 'pre-line';
+      tbox.textContent = 'Đang đọc thời điểm tạo ảnh…'; out.appendChild(tbox);
+      analyzeFileTime(f, function (a) { tbox.className = 'msg ' + a.cls; tbox.textContent = a.text; results[key + 'Time'] = a.data; refreshReport(); });
       var im = D.createElement('img'); im.alt = 'Ảnh đã chọn';
       im.onload = function () {
         results[key] = { ok: true, name: f.name, type: f.type, size: f.size, age: age, w: im.naturalWidth, h: im.naturalHeight };
@@ -1006,6 +1055,19 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
     L.push('Input file có capture: ' + resText(results.fileA, function (r) { return 'OK ' + (r.w || '?') + 'x' + (r.h || '?') + ' ' + kb(r.size) + ' tuổi tệp ' + (r.age === null ? '?' : r.age + 's'); }));
     L.push('Input file thư viện: ' + resText(results.fileB, function (r) { return 'OK ' + (r.w || '?') + 'x' + (r.h || '?') + ' ' + kb(r.size) + ' tuổi tệp ' + (r.age === null ? '?' : r.age + 's'); }));
     L.push('');
+    L.push('');
+    L.push('--- Camera (getUserMedia) ---');
+    var cs = camSnapshot();
+    if (cs.state) L.push(cs.state);
+    else if (cs.error) L.push('Lỗi: ' + cs.error.name + (cs.error.message ? ' - ' + cs.error.message : '') + (cs.error.constraint ? ' (ràng buộc ' + cs.error.constraint + ')' : ''));
+    else {
+      L.push('Cách mở: ' + cs.mode + ', ' + cs.openMs + ' ms, lần thử lỗi trước đó: ' + (cs.attempts ? cs.attempts.length : 0));
+      L.push('Track: ' + objSummary(cs.track));
+      L.push('Settings: ' + objSummary(cs.settings));
+      L.push('Capabilities: ' + (objSummary(cs.capabilities) || 'không cung cấp'));
+      L.push('Khung hình: ' + (cs.frames && cs.frames.measuredFps !== null ? cs.frames.measuredFps + ' fps' : '?') + ', thiết bị thấy được: ' + (cs.devices ? cs.devices.length : 0));
+    }
+    L.push('Video 5 giây: ' + videos.length + ' video, lưu ở ' + store.kind);
     var T = computeTrust();
     L.push('');
     L.push('--- Điểm tin cậy ---');
@@ -1187,8 +1249,8 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
     var s = 0; for (var i = 0; i < a.length; i++) s += Math.abs(a[i] - b[i]);
     return s / a.length;
   }
-  function hashPhoto(p, src) {
-    function done(h) { p.hash = h; refreshReport(); }
+  function hashPhoto(p, src, cb) {
+    function done(h) { p.hash = h; if (cb) cb(h); refreshReport(); }
     var digest = function (buf) {
       crypto.subtle.digest('SHA-256', buf).then(function (r) {
         var u = new Uint8Array(r), h = '';
@@ -1229,7 +1291,9 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
       ps.push({
         slot: slotName(p.k), w: p.w, h: p.h, sizeBytes: p.size, avgLuma: p.luma,
         sha256: p.hash, capturedAt: new Date(p.at).toISOString(), msAfterCameraOn: p.msCam,
-        pointer: p.pointer, motion: p.motion, location: p.loc
+        pointer: p.pointer, motion: p.motion, location: p.loc,
+        time: { deviceLocal: stamp(new Date(p.at)), serverLocal: clockOffset() !== null ? stamp(new Date(p.at - clockOffset())) : null, sameDayAsSystem: sameDay(p.at, Date.now() - (clockOffset() || 0)), clockSkewMs: clockOffset() },
+        video: p.video ? { state: p.video.state, id: p.video.id, sizeBytes: p.video.size, durationMs: p.video.durationMs, mime: p.video.mime, bitrateBps: p.video.bps, sha256: p.video.hash, storedIn: p.video.store, hiddenDuring: p.video.hiddenDuring, error: p.video.error || null } : null
       });
     }
     return {
@@ -1249,13 +1313,14 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
         visibility: D.visibilityState, hasFocus: D.hasFocus ? D.hasFocus() : null,
         webdriver: navigator.webdriver === true, referrer: D.referrer || null
       },
-      camera: cam && cam.ok ? { label: cam.label, facingMode: cam.facing, width: cam.width, height: cam.height, fps: cam.fps, openMs: cam.ms, trackState: rs, deviceCount: results.devices.length, devices: results.devices } : { error: cam ? cam.name : 'chưa bật' },
+      camera: camSnapshot(),
       sensors: { supported: sensor.supported, permission: sensor.perm, samplesTotal: sensor.total, emptyEvents: sensor.nullEvents, recent: motionStats(0) },
       location: { state: geo.state, position: geoSnapshot() },
       clock: { state: clockInfo.state, skewMs: clockInfo.skew, rttMs: clockInfo.rtt, serverDate: clockInfo.server, error: clockInfo.err },
       input: { pointerCounts: ptr.counts },
       photos: ps,
-      fileInputs: { capture: results.fileA, library: results.fileB }
+      videoRecording: { supported: rec.supported, targetMs: REC_MS, preferredMime: pickMime(), storage: store.kind, savedVideos: videos.length, savedBytes: (function () { var t = 0; for (var q = 0; q < videos.length; q++) t += videos[q].size; return t; })() },
+      fileInputs: { capture: results.fileA, captureTime: results.fileATime || null, library: results.fileB, libraryTime: results.fileBTime || null }
     };
   }
 
@@ -1270,11 +1335,11 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
     var webdriver = navigator.webdriver === true;
 
     /* 1. Chụp trực tiếp */
-    if (!cam) add('live', 'Chụp trực tiếp từ camera', 15, 'pend', 'Chưa bật camera.');
-    else if (!cam.ok) add('live', 'Chụp trực tiếp từ camera', 15, 'bad', 'Không mở được camera (' + cam.name + ').');
-    else if (!n) add('live', 'Chụp trực tiếp từ camera', 15, 'pend', 'Camera đã mở, chờ chụp ảnh.');
-    else if (results.capture && results.capture.ok === false) add('live', 'Chụp trực tiếp từ camera', 15, 'bad', 'Không xuất được ảnh từ khung hình.');
-    else add('live', 'Chụp trực tiếp từ camera', 15, 'ok', n + ' ảnh được vẽ từ khung hình camera đang chạy, không qua ô chọn tệp.');
+    if (!cam) add('live', 'Chụp trực tiếp từ camera', 10, 'pend', 'Chưa bật camera.');
+    else if (!cam.ok) add('live', 'Chụp trực tiếp từ camera', 10, 'bad', 'Không mở được camera (' + cam.name + ').');
+    else if (!n) add('live', 'Chụp trực tiếp từ camera', 10, 'pend', 'Camera đã mở, chờ chụp ảnh.');
+    else if (results.capture && results.capture.ok === false) add('live', 'Chụp trực tiếp từ camera', 10, 'bad', 'Không xuất được ảnh từ khung hình.');
+    else add('live', 'Chụp trực tiếp từ camera', 10, 'ok', n + ' ảnh được vẽ từ khung hình camera đang chạy, không qua ô chọn tệp.');
 
     /* 2. Camera */
     if (!cam || !cam.ok) add('cam_dev', 'Camera là phần cứng thật', 15, 'pend', 'Chờ camera hoạt động.');
@@ -1292,12 +1357,12 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
 
     /* 4. GPU khớp thiết bị */
     var gr = gpu.ok ? String(gpu.renderer || '') : '';
-    if (!mobileUA) add('gpu', 'GPU khớp điện thoại', 10, 'na', 'Bỏ qua vì không phải thiết bị di động.');
-    else if (!gpu.ok || !gr) add('gpu', 'GPU khớp điện thoại', 10, 'warn', 'Không đọc được WebGL renderer.');
-    else if (GPU_EMU.test(gr)) add('gpu', 'GPU khớp điện thoại', 10, 'bad', 'Renderer “' + gr + '” là GPU giả lập hoặc phần mềm.');
-    else if (GPU_MOBILE.test(gr) && !/apple m\d/i.test(gr)) add('gpu', 'GPU khớp điện thoại', 10, 'ok', gr + '.');
-    else if (GPU_DESKTOP.test(gr) || /apple m\d/i.test(gr)) add('gpu', 'GPU khớp điện thoại', 10, 'bad', 'Renderer “' + gr + '” là GPU máy tính, mâu thuẫn với User-Agent di động.');
-    else add('gpu', 'GPU khớp điện thoại', 10, 'warn', 'Renderer “' + gr + '” không thuộc nhóm quen thuộc.');
+    if (!mobileUA) add('gpu', 'GPU khớp điện thoại', 5, 'na', 'Bỏ qua vì không phải thiết bị di động.');
+    else if (!gpu.ok || !gr) add('gpu', 'GPU khớp điện thoại', 5, 'warn', 'Không đọc được WebGL renderer.');
+    else if (GPU_EMU.test(gr)) add('gpu', 'GPU khớp điện thoại', 5, 'bad', 'Renderer “' + gr + '” là GPU giả lập hoặc phần mềm.');
+    else if (GPU_MOBILE.test(gr) && !/apple m\d/i.test(gr)) add('gpu', 'GPU khớp điện thoại', 5, 'ok', gr + '.');
+    else if (GPU_DESKTOP.test(gr) || /apple m\d/i.test(gr)) add('gpu', 'GPU khớp điện thoại', 5, 'bad', 'Renderer “' + gr + '” là GPU máy tính, mâu thuẫn với User-Agent di động.');
+    else add('gpu', 'GPU khớp điện thoại', 5, 'warn', 'Renderer “' + gr + '” không thuộc nhóm quen thuộc.');
 
     /* 5. Cảm biến chuyển động */
     var mot = motionStats(0);
@@ -1322,7 +1387,7 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
     else add('geo', 'Vị trí GPS', 10, 'warn', 'Không có vị trí (' + geo.state + ').');
 
     /* 7. Hành vi chụp */
-    if (!n) add('behav', 'Cách thao tác chụp', 10, 'pend', 'Chưa có ảnh.');
+    if (!n) add('behav', 'Cách thao tác chụp', 5, 'pend', 'Chưa có ảnh.');
     else {
       var mouse = 0, unk = 0, fast = false;
       for (i = 0; i < n; i++) {
@@ -1331,14 +1396,14 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
         if (i > 0 && shots[i].at - shots[i - 1].at < 1500) fast = true;
       }
       var early = shots[0].msCam !== null && shots[0].msCam < 1500;
-      if (mouse) add('behav', 'Cách thao tác chụp', 10, 'bad', mouse + '/' + n + ' ảnh chụp bằng chuột (thường là máy tính).');
+      if (mouse) add('behav', 'Cách thao tác chụp', 5, 'bad', mouse + '/' + n + ' ảnh chụp bằng chuột (thường là máy tính).');
       else if (unk || fast || early) {
         var why = [];
         if (unk) why.push(unk + ' ảnh không ghi nhận được chạm trực tiếp');
         if (fast) why.push('hai lần chụp cách nhau dưới 1,5 giây');
         if (early) why.push('chụp ngay sau khi bật camera');
-        add('behav', 'Cách thao tác chụp', 10, 'warn', why.join('; ') + '.');
-      } else add('behav', 'Cách thao tác chụp', 10, 'ok', n + '/' + n + ' ảnh chụp bằng chạm, nhịp chụp bình thường.');
+        add('behav', 'Cách thao tác chụp', 5, 'warn', why.join('; ') + '.');
+      } else add('behav', 'Cách thao tác chụp', 5, 'ok', n + '/' + n + ' ảnh chụp bằng chạm, nhịp chụp bình thường.');
     }
 
     /* 8. Toàn vẹn ảnh */
@@ -1364,13 +1429,52 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
       else add('photo', 'Toàn vẹn và không trùng ảnh', 5, 'ok', n + ' ảnh, mỗi ảnh có SHA-256 riêng' + (n > 1 ? ', không trùng và không giống nhau' : '') + '.');
     }
 
-    /* 9. Đồng hồ */
-    if (clockInfo.state === 'pending') add('clock', 'Đồng hồ khớp máy chủ', 5, 'pend', 'Đang so giờ với máy chủ…');
-    else if (clockInfo.state === 'na') add('clock', 'Đồng hồ khớp máy chủ', 5, 'na', clockInfo.err || 'Không đo được.');
+    /* 9. Thời điểm tạo ảnh khớp giờ hệ thống */
+    var TN = 'Thời điểm tạo ảnh khớp giờ hệ thống';
+    if (!n) add('time', TN, 10, 'pend', 'Chưa có ảnh.');
     else {
-      var sk = Math.abs(clockInfo.skew);
-      var skTxt = 'Lệch ' + (sk < 1000 ? sk + ' ms' : fmt1(sk / 1000, 1) + ' giây') + ' so với header Date của máy chủ.';
-      add('clock', 'Đồng hồ khớp máy chủ', 5, sk <= 120000 ? 'ok' : (sk <= 600000 ? 'warn' : 'bad'), skTxt);
+      var off = clockOffset(), drift = null;
+      if (off === null && window.performance && performance.timeOrigin) drift = Math.round(Date.now() - (performance.timeOrigin + performance.now()));
+      var gap = off !== null ? off : drift;
+      var sysNow = Date.now() - (off || 0), dayOk = true;
+      for (i = 0; i < n; i++) {
+        if (!sameDay(shots[i].at, sysNow) && Math.abs(sysNow - shots[i].at) > 3600000) dayOk = false;
+      }
+      var tdesc = 'Ảnh đầu tạo lúc ' + stamp(new Date(shots[0].at)) + ' (giờ máy)' + (off !== null ? ', quy ra giờ máy chủ ' + stamp(new Date(shots[0].at - off)) : '') + '; ' + (dayOk ? 'cùng ngày với hệ thống' : 'KHÁC ngày với hệ thống') + '. ';
+      if (gap === null) add('time', TN, 10, dayOk ? 'warn' : 'bad', tdesc + 'Không có giờ máy chủ để so sánh (hãy mở qua HTTPS/GitHub Pages).');
+      else {
+        var tier = gapTier(gap);
+        tdesc += 'Đồng hồ máy lệch ' + fmtGap(gap) + (off !== null ? ' so với máy chủ' : ' so với đồng hồ nội bộ của trình duyệt (chưa có giờ máy chủ)') + ': ' + TIER_TXT[tier] + '.';
+        add('time', TN, 10, !dayOk ? 'bad' : (tier <= 1 ? 'ok' : (tier === 2 ? 'warn' : 'bad')), tdesc);
+      }
+    }
+
+    /* 10. Video bằng chứng */
+    var VN = 'Video bằng chứng 5 giây';
+    if (!n) add('video', VN, 10, 'pend', 'Chưa có ảnh.');
+    else if (!rec.supported) add('video', VN, 10, 'warn', 'Trình duyệt hoặc webview không hỗ trợ MediaRecorder nên không ghi được video.');
+    else {
+      var vRec = 0, vDone = 0, vErr = 0, vMiss = 0, vShort = 0, vHid = 0, vBytes = 0;
+      for (i = 0; i < n; i++) {
+        var vi = shots[i].video;
+        if (!vi) vMiss++;
+        else if (vi.state === 'recording') vRec++;
+        else if (vi.state === 'done') {
+          vDone++; vBytes += vi.size;
+          if (vi.durationMs < 4500 || vi.size < 30720) vShort++;
+          if (vi.hiddenDuring) vHid++;
+        } else vErr++;
+      }
+      if (vRec) add('video', VN, 10, 'pend', 'Đang ghi video…');
+      else if (vDone === n && !vShort && !vHid) add('video', VN, 10, 'ok', n + '/' + n + ' ảnh có video đủ 5 giây (TB ' + kb(vBytes / n) + ').');
+      else if (vDone === 0) add('video', VN, 10, 'bad', 'Không ghi được video cho ảnh nào' + (shots[n - 1].video && shots[n - 1].video.error ? ': ' + shots[n - 1].video.error : '') + '.');
+      else {
+        var vw2 = [];
+        if (vDone < n) vw2.push((n - vDone) + ' ảnh thiếu video');
+        if (vShort) vw2.push(vShort + ' video ngắn hoặc quá nhẹ (nghi hình đen/đứng yên)');
+        if (vHid) vw2.push(vHid + ' video bị ẩn tab khi ghi');
+        add('video', VN, 10, 'warn', vw2.join('; ') + '.');
+      }
     }
 
     /* 10. Môi trường trang */
@@ -1457,10 +1561,7 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
       ['Kết luận', en.verdict + (en.app ? ' (' + en.app + ')' : '')], ['Hệ điều hành', en.os], ['Trình duyệt / engine', en.browser + ' / ' + en.engine],
       ['HTTPS', yn(en.secureContext)], ['Nằm trong iframe', yn(en.inIframe)], ['Tab đang hiển thị', en.visibility], ['Bị điều khiển tự động', yn(en.webdriver)]
     ]]);
-    groups.push(['Camera', cm.error ? [['Trạng thái', cm.error]] : [
-      ['Tên', cm.label || 'không đọc được'], ['Hướng', cm.facingMode || 'không rõ'], ['Độ phân giải', (cm.width || '?') + '×' + (cm.height || '?') + (cm.fps ? ' @' + Math.round(cm.fps) + 'fps' : '')],
-      ['Luồng video', cm.trackState || '?'], ['Số camera thấy được', cm.deviceCount + (cm.devices.length ? ': ' + cm.devices.join(', ') : '')]
-    ]]);
+    groups.push(['Camera (getUserMedia)', cameraRows(cm)]);
     groups.push(['Cảm biến chuyển động', [
       ['Hỗ trợ / quyền', yn(sn.supported) + ' / ' + sn.permission],
       ['Mẫu nhận được', sn.samplesTotal + ' (sự kiện rỗng: ' + sn.emptyEvents + ')'],
@@ -1471,7 +1572,7 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
       ['Toạ độ', lc.position ? (lc.position.lat.toFixed(5) + ', ' + lc.position.lng.toFixed(5) + ' (±' + Math.round(lc.position.acc) + ' m)') : 'Chưa có']
     ]]);
     groups.push(['Đồng hồ', [
-      ['Lệch so với máy chủ', ev.clock.skewMs !== null ? (ev.clock.skewMs + ' ms (độ trễ mạng ' + ev.clock.rttMs + ' ms)') : (ev.clock.error || 'Đang đo')]
+      ['Lệch so với máy chủ', ev.clock.skewMs !== null ? (fmtGap(ev.clock.skewMs) + ' · ' + tierText(ev.clock.skewMs) + ' · độ trễ mạng ' + ev.clock.rttMs + ' ms') : (ev.clock.error || 'Đang đo')]
     ]]);
     var pc = ev.input.pointerCounts, pcs = [];
     for (var k in pc) if (Object.prototype.hasOwnProperty.call(pc, k)) pcs.push(k + ': ' + pc[k]);
@@ -1489,10 +1590,23 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
         ' · GPS ' + (p.location ? '±' + Math.round(p.location.acc) + ' m' : 'không có')]);
     }
     groups.push(['Ảnh đã chụp', prow.length ? prow : [['Trạng thái', 'Chưa chụp ảnh nào']]]);
+    var trow = [], vrow = [];
+    var sysOff = clockOffset();
+    trow.push(['Giờ hệ thống hiện tại', stamp(new Date(Date.now() - (sysOff || 0))) + (sysOff !== null ? ' (giờ máy chủ)' : ' (giờ máy này, chưa đo được giờ máy chủ)')]);
+    for (i = 0; i < ev.photos.length; i++) {
+      var pp = ev.photos[i];
+      trow.push([pp.slot, 'Tạo lúc ' + pp.time.deviceLocal + ' (giờ máy)' + (pp.time.serverLocal ? ' · ' + pp.time.serverLocal + ' (giờ máy chủ)' : '') + ' · cùng ngày hệ thống: ' + yn(pp.time.sameDayAsSystem)]);
+      var pv = pp.video;
+      vrow.push([pp.slot, !pv ? 'Không có' : (pv.state === 'done' ? (fmt1(pv.durationMs / 1000, 1) + ' s · ' + kb(pv.sizeBytes) + ' · ' + (pv.mime || '?') + ' · ' + Math.round((pv.bitrateBps || 0) / 1000) + ' kbps · ' + (pv.sha256 && pv.sha256.length === 64 ? 'sha256 ' + pv.sha256.slice(0, 12) + '…' : '') + ' · ' + (pv.storedIn || '')) : (pv.state === 'recording' ? 'Đang ghi…' : 'Lỗi: ' + (pv.error || pv.state)))]);
+    }
+    if (ev.photos.length) groups.push(['Thời điểm tạo ảnh', trow]);
+    groups.push(['Video bằng chứng', ev.photos.length ? vrow : [['Trạng thái', ev.videoRecording.supported ? 'Chưa có' : 'MediaRecorder không được hỗ trợ']]]);
 
     var fi = ev.fileInputs, frow = [];
+    var ftA = fi.captureTime, ftB = fi.libraryTime;
     function fdesc(r) { return !r ? 'chưa thử' : (r.ok ? (r.w + '×' + r.h + ', ' + kb(r.size) + ', tệp tạo ' + (r.age === null ? '?' : r.age + ' giây trước')) : (r.note || 'thất bại')); }
-    frow.push(['Ô có capture', fdesc(fi.capture)]); frow.push(['Ô chọn thư viện', fdesc(fi.library)]);
+    frow.push(['Ô có capture', fdesc(fi.capture)]); if (ftA) frow.push(['Thời điểm tạo (capture)', ftA.summary]);
+    frow.push(['Ô chọn thư viện', fdesc(fi.library)]); if (ftB) frow.push(['Thời điểm tạo (thư viện)', ftB.summary]);
     groups.push(['Ô chọn tệp (không tính vào điểm)', frow]);
 
     var key = JSON.stringify(groups);
@@ -1541,6 +1655,412 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
       copyText(JSON.stringify(collectEvidence(), null, 2), function (ok) { toast(ok ? 'Đã sao chép JSON' : 'Không sao chép tự động được. Mở “JSON đầy đủ” rồi chọn và sao chép.'); });
     });
     setInterval(function () { if (stream) renderEvidence(); }, 1000);
+  }
+
+  /* ---------- Thời gian: so ảnh với giờ hệ thống ---------- */
+  function fmtGap(ms) {
+    var s = Math.abs(ms) / 1000;
+    if (s < 1) return Math.round(Math.abs(ms)) + ' ms';
+    if (s < 120) return fmt1(s, 1) + ' giây';
+    if (s < 7200) return fmt1(s / 60, 1) + ' phút';
+    if (s < 172800) return fmt1(s / 3600, 1) + ' giờ';
+    return fmt1(s / 86400, 1) + ' ngày';
+  }
+  function sameDay(a, b) {
+    var x = new Date(a), y = new Date(b);
+    return x.getFullYear() === y.getFullYear() && x.getMonth() === y.getMonth() && x.getDate() === y.getDate();
+  }
+  var TIER_TXT = ['rất khớp (≤ 1 phút)', 'chấp nhận được (≤ 5 phút)', 'đáng nghi (5 đến 30 phút)', 'lệch lớn (> 30 phút)'];
+  function gapTier(ms) { var a = Math.abs(ms); return a <= 60000 ? 0 : (a <= 300000 ? 1 : (a <= 1800000 ? 2 : 3)); }
+  function tierText(ms) { return TIER_TXT[gapTier(ms)]; }
+  function clockOffset() { return clockInfo.state === 'ok' ? clockInfo.skew : null; }
+
+  /* ---------- EXIF: ngày tạo ảnh của tệp chọn từ máy ---------- */
+  function readTiff(v, t) {
+    var little = v.getUint16(t) === 0x4949;
+    var u16 = function (p) { return v.getUint16(p, little); };
+    var u32 = function (p) { return v.getUint32(p, little); };
+    var str = function (p, n) { var s = ''; for (var i = 0; i < n; i++) { var c = v.getUint8(p + i); if (!c) break; s += String.fromCharCode(c); } return s; };
+    var out = {};
+    var readIfd = function (p, isExif) {
+      var n = Math.min(u16(p), 200), exifPtr = null;
+      for (var i = 0; i < n; i++) {
+        var e = p + 2 + i * 12, tag = u16(e), type = u16(e + 2), cnt = u32(e + 4);
+        if (tag === 0x8769 && !isExif) { exifPtr = t + u32(e + 8); continue; }
+        if (type !== 2) continue;
+        var s = str(cnt > 4 ? t + u32(e + 8) : e + 8, Math.min(cnt, 64));
+        if (tag === 0x9003) out.dateTimeOriginal = s;
+        else if (tag === 0x9004) out.dateTimeDigitized = s;
+        else if (tag === 0x0132) out.dateTime = s;
+        else if (tag === 0x9011) out.offsetTimeOriginal = s;
+        else if (tag === 0x010F) out.make = s;
+        else if (tag === 0x0110) out.model = s;
+        else if (tag === 0x0131) out.software = s;
+      }
+      return exifPtr;
+    };
+    var ex = readIfd(t + u32(t + 4), false);
+    if (ex) readIfd(ex, true);
+    return out;
+  }
+  function parseExif(buf) {
+    try {
+      var v = new DataView(buf);
+      if (v.byteLength < 12 || v.getUint16(0) !== 0xFFD8) return null;
+      var off = 2;
+      while (off + 4 < v.byteLength) {
+        var marker = v.getUint16(off), size = v.getUint16(off + 2);
+        if (marker === 0xFFE1 && v.getUint32(off + 4) === 0x45786966) return readTiff(v, off + 10);
+        if ((marker & 0xFF00) !== 0xFF00) break;
+        off += 2 + size;
+      }
+    } catch (e) {}
+    return null;
+  }
+  function parseExifDate(s, offs) {
+    if (!s) return null;
+    var m = /^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/.exec(s);
+    if (!m || m[1] === '0000') return null;
+    var o = offs ? /^([+-])(\d{2}):(\d{2})/.exec(offs) : null, ms;
+    if (o) ms = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]) - (o[1] === '-' ? -1 : 1) * (+o[2] * 60 + (+o[3])) * 60000;
+    else ms = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]).getTime();
+    return isNaN(ms) ? null : ms;
+  }
+  function analyzeFileTime(f, cb) {
+    var finish = function (ex) {
+      var off = clockOffset(), now = Date.now() - (off || 0);
+      var srcTxt = off !== null ? 'giờ máy chủ' : 'giờ của máy này (chưa đo được giờ máy chủ)';
+      var exTime = ex ? (parseExifDate(ex.dateTimeOriginal, ex.offsetTimeOriginal) || parseExifDate(ex.dateTimeDigitized, ex.offsetTimeOriginal) || parseExifDate(ex.dateTime, null)) : null;
+      var created = exTime !== null ? exTime : (f.lastModified || null);
+      var createdSrc = exTime !== null ? 'EXIF' : 'thời gian sửa tệp';
+      var lines = [], cls, verdict, gap = null;
+      lines.push('Giờ hệ thống: ' + stamp(new Date(now)) + ' (' + srcTxt + ')');
+      if (ex) lines.push('Thiết bị chụp: ' + ((ex.make || '') + ' ' + (ex.model || '')).replace(/^\s+|\s+$/g, '') + (ex.software ? ' · phần mềm: ' + ex.software : ''));
+      lines.push('Ngày tạo ảnh (EXIF): ' + (exTime !== null ? stamp(new Date(exTime)) : 'không có'));
+      lines.push('Ngày sửa tệp: ' + (f.lastModified ? stamp(new Date(f.lastModified)) : 'không đọc được'));
+      if (created === null) { cls = 'warn'; verdict = 'Không xác định được ngày tạo ảnh.'; }
+      else {
+        gap = now - created;
+        if (gap < -60000) { cls = 'bad'; verdict = 'Ngày tạo ảnh nằm ở TƯƠNG LAI so với hệ thống ' + fmtGap(gap) + ': bất thường.'; }
+        else if (gap <= 300000) { cls = 'ok'; verdict = 'Khớp giờ hệ thống: ảnh tạo cách đây ' + fmtGap(gap) + ' (trong ngưỡng 5 phút).'; }
+        else if (sameDay(created, now)) { cls = 'warn'; verdict = 'Ảnh tạo cách đây ' + fmtGap(gap) + ', cùng ngày nhưng ngoài ngưỡng 5 phút.'; }
+        else { cls = 'bad'; verdict = 'Ảnh được tạo từ ngày ' + stamp(new Date(created)).slice(0, 10) + ' (cách đây ' + fmtGap(gap) + '), không phải ảnh vừa chụp.'; }
+      }
+      lines.push('Kết luận (theo ' + createdSrc + '): ' + verdict);
+      if (!ex) lines.push('Lưu ý: không đọc được EXIF (ảnh bị nén lại, ảnh chụp màn hình, hoặc định dạng HEIC), đang dùng thời gian sửa tệp.');
+      if (exTime !== null && f.lastModified && Math.abs(exTime - f.lastModified) > 300000) lines.push('Lưu ý: ngày EXIF và ngày sửa tệp lệch ' + fmtGap(exTime - f.lastModified) + ' (tệp có thể đã được sao chép hoặc chỉnh sửa).');
+      if (ex && ex.software && /photoshop|lightroom|snapseed|gimp|picsart|canva|facetune|editor/i.test(ex.software)) lines.push('Lưu ý: trường Software cho thấy ảnh có thể đã qua phần mềm chỉnh sửa.');
+      cb({
+        cls: cls, text: lines.join('\n'),
+        data: { exif: ex, lastModified: f.lastModified ? new Date(f.lastModified).toISOString() : null, systemNow: new Date(now).toISOString(), systemSource: off !== null ? 'server' : 'device', createdFrom: createdSrc, gapMs: gap, verdict: verdict, summary: createdSrc + ' ' + (created !== null ? stamp(new Date(created)) : '?') + ' → ' + verdict }
+      });
+    };
+    try {
+      var fr = new FileReader();
+      fr.onload = function () { finish(parseExif(fr.result)); };
+      fr.onerror = function () { finish(null); };
+      fr.readAsArrayBuffer(f.slice ? f.slice(0, 262144) : f);
+    } catch (e) { finish(null); }
+  }
+
+  /* ---------- Camera: toàn bộ thông tin lấy được từ getUserMedia ---------- */
+  var camInfo = null, camAttempts = [];
+  var frameStat = { count: 0, last: null, times: [], token: 0 };
+  function errDetail(e) {
+    if (!e) return { name: 'Unknown', message: '', constraint: '' };
+    return { name: e.name || e.code || String(e), message: e.message || '', constraint: e.constraint || '' };
+  }
+  function pickJson(o) { try { return o ? JSON.parse(JSON.stringify(o)) : null; } catch (e) { return null; } }
+  function shortId(id) { return id ? String(id).slice(0, 8) + '…' : ''; }
+  function rangeText(v) {
+    if (v === null || v === undefined) return '';
+    if (Object.prototype.toString.call(v) === '[object Array]') return '[' + v.join(', ') + ']';
+    if (typeof v === 'object') {
+      if (v.min !== undefined || v.max !== undefined) return (v.min !== undefined ? v.min : '?') + '–' + (v.max !== undefined ? v.max : '?') + (v.step ? ' (bước ' + v.step + ')' : '');
+      try { return JSON.stringify(v); } catch (e) { return '?'; }
+    }
+    return String(v);
+  }
+  function objSummary(o) {
+    if (!o) return '';
+    var out = [];
+    for (var k in o) {
+      if (!Object.prototype.hasOwnProperty.call(o, k)) continue;
+      var val = (k === 'deviceId' || k === 'groupId' || k === 'id') ? shortId(o[k]) : rangeText(o[k]);
+      if (val !== '') out.push(k + '=' + val);
+    }
+    return out.join(', ');
+  }
+  function buildCamInfo(s, tr, mode, t0) {
+    var info = { mode: mode, requested: pickJson(buildConstraints(mode)), openMs: Date.now() - t0, attempts: camAttempts.slice(), at: new Date().toISOString() };
+    try { info.stream = { id: s.id, active: s.active, videoTracks: s.getVideoTracks().length, audioTracks: s.getAudioTracks().length }; } catch (e) {}
+    try { info.track = { id: tr.id, kind: tr.kind, label: tr.label, readyState: tr.readyState, enabled: tr.enabled, muted: tr.muted, contentHint: tr.contentHint || '' }; } catch (e1) {}
+    try { info.settings = tr.getSettings ? pickJson(tr.getSettings()) : null; } catch (e2) {}
+    try { info.capabilities = tr.getCapabilities ? pickJson(tr.getCapabilities()) : null; } catch (e3) {}
+    try { info.appliedConstraints = tr.getConstraints ? pickJson(tr.getConstraints()) : null; } catch (e4) {}
+    try { info.supportedConstraints = (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) ? pickJson(navigator.mediaDevices.getSupportedConstraints()) : null; } catch (e5) {}
+    info.devices = [];
+    info.photoCapabilities = window.ImageCapture ? 'đang đọc' : 'không hỗ trợ ImageCapture';
+    try {
+      if (window.ImageCapture) {
+        new ImageCapture(tr).getPhotoCapabilities().then(function (pc) { info.photoCapabilities = pickJson(pc) || 'rỗng'; refreshReport(); },
+          function (er) { info.photoCapabilities = 'lỗi: ' + errName(er); });
+      }
+    } catch (e6) { info.photoCapabilities = 'lỗi: ' + errName(e6); }
+    return info;
+  }
+  function watchFrames() {
+    frameStat.count = 0; frameStat.last = null; frameStat.times = [];
+    var token = ++frameStat.token;
+    if (!video.requestVideoFrameCallback) return;
+    var cb = function (now, meta) {
+      if (token !== frameStat.token || !stream) return;
+      frameStat.count++;
+      frameStat.last = { width: meta.width, height: meta.height, presentedFrames: meta.presentedFrames, mediaTime: meta.mediaTime, captureTime: meta.captureTime, receiveTime: meta.receiveTime, processingDuration: meta.processingDuration };
+      frameStat.times.push(now); if (frameStat.times.length > 60) frameStat.times.shift();
+      video.requestVideoFrameCallback(cb);
+    };
+    video.requestVideoFrameCallback(cb);
+  }
+  function camSnapshot() {
+    if (!camInfo) return { state: 'chưa bật camera' };
+    if (camInfo.error) return camInfo;
+    var o = pickJson(camInfo) || {};
+    o.active = !!stream;
+    try {
+      var tr = stream ? stream.getVideoTracks()[0] : null;
+      if (tr) { o.track = o.track || {}; o.track.readyState = tr.readyState; o.track.enabled = tr.enabled; o.track.muted = tr.muted; o.settings = pickJson(tr.getSettings()); }
+    } catch (e) {}
+    var q = null; try { if (video.getVideoPlaybackQuality) q = pickJson(video.getVideoPlaybackQuality()); } catch (e2) {}
+    var ts = frameStat.times, fps = null;
+    if (ts.length > 5) { var span = ts[ts.length - 1] - ts[0]; if (span > 0) fps = +((ts.length - 1) / (span / 1000)).toFixed(1); }
+    o.video = { videoWidth: video.videoWidth, videoHeight: video.videoHeight, readyState: video.readyState, paused: video.paused, currentTime: +(video.currentTime || 0).toFixed(2), playback: q };
+    o.frames = { callbackSupported: !!video.requestVideoFrameCallback, count: frameStat.count, measuredFps: fps, last: frameStat.last };
+    return o;
+  }
+  function cameraRows(cm) {
+    if (cm.state) return [['Trạng thái', cm.state]];
+    if (cm.error) {
+      var rows0 = [['Lỗi', cm.error.name + (cm.error.message ? ': ' + cm.error.message : '') + (cm.error.constraint ? ' (ràng buộc: ' + cm.error.constraint + ')' : '')]];
+      for (var a0 = 0; a0 < (cm.attempts || []).length; a0++) rows0.push(['Lần thử ' + (a0 + 1), cm.attempts[a0].mode + ' → ' + cm.attempts[a0].error.name]);
+      return rows0;
+    }
+    var rows = [], st = cm.settings || {}, tk = cm.track || {}, i;
+    rows.push(['Tên camera', tk.label || 'không đọc được']);
+    rows.push(['Cách mở', cm.mode + ' · mất ' + cm.openMs + ' ms · số lần thử lỗi trước đó: ' + (cm.attempts ? cm.attempts.length : 0)]);
+    rows.push(['Yêu cầu gửi lên', cm.requested ? JSON.stringify(cm.requested) : '']);
+    rows.push(['Stream', cm.stream ? ('id ' + shortId(cm.stream.id) + ', active=' + cm.stream.active + ', video ' + cm.stream.videoTracks + ', audio ' + cm.stream.audioTracks) : '']);
+    rows.push(['Track', 'id ' + shortId(tk.id) + ', ' + tk.kind + ', trạng thái ' + tk.readyState + ', enabled=' + tk.enabled + ', muted=' + tk.muted + (tk.contentHint ? ', contentHint=' + tk.contentHint : '')]);
+    rows.push(['Settings thực tế', objSummary(st)]);
+    rows.push(['Capabilities (khả năng)', objSummary(cm.capabilities) || 'trình duyệt không cung cấp']);
+    rows.push(['Constraints đang áp dụng', objSummary(cm.appliedConstraints) || 'không có']);
+    var sup = []; if (cm.supportedConstraints) for (var k in cm.supportedConstraints) if (cm.supportedConstraints[k]) sup.push(k);
+    rows.push(['Constraints trình duyệt hỗ trợ', sup.length ? sup.join(', ') : 'không rõ']);
+    rows.push(['ImageCapture', typeof cm.photoCapabilities === 'string' ? cm.photoCapabilities : objSummary(cm.photoCapabilities)]);
+    var dv = cm.devices || [];
+    for (i = 0; i < dv.length; i++) rows.push(['Thiết bị ' + (i + 1), dv[i].kind + ' · ' + (dv[i].label || 'không có tên') + ' · id ' + dv[i].deviceId + (dv[i].groupId ? ' · nhóm ' + dv[i].groupId : '')]);
+    var vd = cm.video || {}, fr = cm.frames || {}, pq = vd.playback;
+    rows.push(['Khung hình trên video', (vd.videoWidth || '?') + '×' + (vd.videoHeight || '?') + ', readyState ' + vd.readyState + ', paused=' + vd.paused + ', currentTime ' + vd.currentTime + ' s']);
+    rows.push(['Tốc độ khung hình đo được', fr.callbackSupported ? ((fr.measuredFps !== null ? fr.measuredFps + ' fps' : 'đang đo') + ', đã nhận ' + fr.count + ' khung' + (fr.last ? ', presentedFrames ' + fr.last.presentedFrames : '')) : 'không hỗ trợ requestVideoFrameCallback']);
+    rows.push(['Chất lượng phát', pq ? ('tổng ' + pq.totalVideoFrames + ' khung, rơi ' + pq.droppedVideoFrames) : 'không hỗ trợ']);
+    return rows;
+  }
+
+  /* ---------- Ghi video 5 giây + lưu IndexedDB ---------- */
+  var REC_MS = 5000, MAX_VIDEOS = 20;
+  var rec = { supported: (typeof MediaRecorder !== 'undefined'), active: false, current: null, timer: null, tick: null };
+  var videos = [];
+  var store = { kind: 'đang mở…', db: null };
+  var playerUrl = null;
+
+  function pickMime() {
+    if (!window.MediaRecorder || !MediaRecorder.isTypeSupported) return '';
+    var c = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=h264', 'video/webm;codecs=vp8', 'video/webm'];
+    for (var i = 0; i < c.length; i++) { try { if (MediaRecorder.isTypeSupported(c[i])) return c[i]; } catch (e) {} }
+    return '';
+  }
+  function setRecUI(on, t0) {
+    var box = $('rec');
+    $('btnShot').disabled = on || !stream;
+    $('btnCam').disabled = on; $('btnFlip').disabled = on; $('devSel').disabled = on;
+    clearInterval(rec.tick);
+    if (!on) { box.hidden = true; return; }
+    var update = function () {
+      var el = performance.now() - t0, left = Math.max(0, Math.ceil((REC_MS - el) / 1000));
+      $('recFill').style.width = Math.min(100, el / REC_MS * 100) + '%';
+      var txt = 'Còn ' + left + ' giây';
+      if ($('recLeft').textContent !== txt) $('recLeft').textContent = txt;
+    };
+    box.hidden = false; update();
+    rec.tick = setInterval(update, 100);
+  }
+  function startRecording(key) {
+    var info = { key: key, state: 'error', error: '', id: null, size: 0, durationMs: 0, mime: '', bps: 0, w: 0, h: 0, hiddenDuring: false, store: '', hash: null, startedAt: Date.now() };
+    rec.current = info;
+    if (!rec.supported) { info.state = 'unsupported'; info.error = 'MediaRecorder không có trong trình duyệt hoặc webview này'; log('Không ghi được video: ' + info.error, 'warn'); return; }
+    var tr = null; try { tr = stream.getVideoTracks()[0]; } catch (e) {}
+    if (!tr) { info.error = 'Không có luồng video'; log('Không ghi được video: ' + info.error, 'bad'); return; }
+    var st = {}; try { st = tr.getSettings ? tr.getSettings() : {}; } catch (e1) {}
+    var h = st.height || video.videoHeight || 720;
+    var bps = h >= 1000 ? 1500000 : (h >= 700 ? 1000000 : 600000);
+    var mime = pickMime(), ms, mr, chunks = [];
+    try { ms = new MediaStream([tr]); } catch (e2) { ms = stream; }
+    var opts = { videoBitsPerSecond: bps }; if (mime) opts.mimeType = mime;
+    try { mr = new MediaRecorder(ms, opts); }
+    catch (e3) { try { mr = new MediaRecorder(ms); } catch (e4) { info.error = 'Khởi tạo MediaRecorder lỗi: ' + errName(e4); log(info.error, 'bad'); return; } }
+    info.mime = mr.mimeType || mime || ''; info.bps = bps; info.w = st.width || video.videoWidth; info.h = st.height || video.videoHeight;
+    var t0 = performance.now();
+    var onVis = function () { if (D.visibilityState === 'hidden') info.hiddenDuring = true; };
+    D.addEventListener('visibilitychange', onVis);
+    mr.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+    mr.onerror = function (e) { info.error = 'MediaRecorder lỗi: ' + (e && e.error ? errName(e.error) : ''); log(info.error, 'bad'); };
+    mr.onstop = function () {
+      D.removeEventListener('visibilitychange', onVis);
+      clearTimeout(rec.timer);
+      info.durationMs = Math.round(performance.now() - t0);
+      rec.active = false; setRecUI(false);
+      var blob = new Blob(chunks, { type: info.mime || 'video/webm' });
+      chunks = [];
+      if (!blob.size) { info.state = 'error'; info.error = info.error || 'Video rỗng'; log('Video bằng chứng rỗng', 'bad'); renderSlots(); refreshReport(); return; }
+      info.state = 'done'; info.size = blob.size;
+      saveVideo(info, blob);
+    };
+    try { mr.start(1000); }
+    catch (e5) { D.removeEventListener('visibilitychange', onVis); info.error = 'Không bắt đầu ghi được: ' + errName(e5); log(info.error, 'bad'); return; }
+    info.state = 'recording'; rec.active = true;
+    log('Bắt đầu ghi video ' + (REC_MS / 1000) + ' s (' + (info.mime || 'mặc định') + ', tối đa ' + Math.round(bps / 1000) + ' kbps)');
+    setRecUI(true, t0);
+    rec.timer = setTimeout(function () { try { if (mr.state !== 'inactive') mr.stop(); } catch (e6) {} }, REC_MS);
+  }
+
+  /* IndexedDB */
+  function idbOpen(cb) {
+    try {
+      if (!window.indexedDB) { cb(false); return; }
+      var r = indexedDB.open('poc_chup_xe_audit', 1);
+      r.onupgradeneeded = function () { r.result.createObjectStore('videos', { keyPath: 'id' }); };
+      r.onsuccess = function () { store.db = r.result; cb(true); };
+      r.onerror = function () { cb(false); };
+      r.onblocked = function () { cb(false); };
+    } catch (e) { cb(false); }
+  }
+  function idbPut(v, cb) {
+    try {
+      var tx = store.db.transaction('videos', 'readwrite'); tx.objectStore('videos').put(v);
+      tx.oncomplete = function () { cb(true); }; tx.onerror = function () { cb(false); }; tx.onabort = function () { cb(false); };
+    } catch (e) { cb(false); }
+  }
+  function idbDelete(id, cb) {
+    try {
+      var tx = store.db.transaction('videos', 'readwrite'); tx.objectStore('videos')['delete'](id);
+      tx.oncomplete = function () { cb(true); }; tx.onerror = function () { cb(false); };
+    } catch (e) { cb(false); }
+  }
+  function idbClear(cb) {
+    try {
+      var tx = store.db.transaction('videos', 'readwrite'); tx.objectStore('videos').clear();
+      tx.oncomplete = function () { cb(true); }; tx.onerror = function () { cb(false); };
+    } catch (e) { cb(false); }
+  }
+  function idbAll(cb) {
+    try {
+      var out = [], req = store.db.transaction('videos', 'readonly').objectStore('videos').openCursor();
+      req.onsuccess = function () { var c = req.result; if (c) { out.push(c.value); c['continue'](); } else cb(out); };
+      req.onerror = function () { cb(null); };
+    } catch (e) { cb(null); }
+  }
+
+  function saveVideo(info, blob) {
+    var id = 'v' + Date.now().toString(36) + Math.floor(Math.random() * 1296).toString(36);
+    info.id = id;
+    var p = photos[info.key];
+    var vr = { id: id, session: SESSION, slot: info.key, slotName: slotName(info.key), createdAt: new Date(info.startedAt).toISOString(), durationMs: info.durationMs, size: blob.size, mime: info.mime, w: info.w, h: info.h, bps: info.bps, hiddenDuring: info.hiddenDuring, photoSha256: (p && p.hash && p.hash.length === 64) ? p.hash : null, sha256: null, blob: blob };
+    var holder = { hash: null };
+    hashPhoto(holder, blob, function (h) {
+      vr.sha256 = h; info.hash = h;
+      var finish = function (where) {
+        info.store = where;
+        videos.unshift(vr);
+        while (videos.length > MAX_VIDEOS) { var old = videos.pop(); if (store.db) idbDelete(old.id, function () {}); }
+        log('Đã lưu video ' + vr.slotName + ': ' + fmt1(vr.durationMs / 1000, 1) + ' s, ' + kb(vr.size) + ' (' + where + ')', 'ok');
+        renderVideos(); renderSlots(); refreshReport();
+      };
+      if (store.db) idbPut(vr, function (ok) { finish(ok ? 'IndexedDB' : 'bộ nhớ tạm (ghi IndexedDB lỗi)'); });
+      else finish('bộ nhớ tạm');
+    });
+  }
+
+  function vidExt(mime) { return /mp4/i.test(mime || '') ? '.mp4' : '.webm'; }
+  function playVideo(v) {
+    var pl = $('player');
+    if (playerUrl) { try { URL.revokeObjectURL(playerUrl); } catch (e) {} }
+    playerUrl = URL.createObjectURL(v.blob);
+    pl.hidden = false; pl.src = playerUrl;
+    pl.onloadedmetadata = function () {
+      if (pl.duration === Infinity) { pl.currentTime = 1e101; pl.ontimeupdate = function () { pl.ontimeupdate = null; pl.currentTime = 0; }; }
+    };
+    try { var pr = pl.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e1) {}
+    try { pl.scrollIntoView({ block: 'nearest' }); } catch (e2) {}
+  }
+  function downloadVideo(v) {
+    var url = URL.createObjectURL(v.blob), a = D.createElement('a');
+    a.href = url; a.download = 'xe_' + v.session + '_' + v.slot + '_' + v.createdAt.replace(/[-:.]/g, '').slice(0, 15) + vidExt(v.mime);
+    D.body.appendChild(a); a.click(); D.body.removeChild(a);
+    setTimeout(function () { try { URL.revokeObjectURL(url); } catch (e) {} }, 15000);
+  }
+  function removeVideo(id) {
+    for (var i = 0; i < videos.length; i++) if (videos[i].id === id) { videos.splice(i, 1); break; }
+    if (store.db) idbDelete(id, function () {});
+    renderVideos();
+  }
+  function renderVideos() {
+    var box = $('vlist'); if (!box) return;
+    box.textContent = '';
+    var total = 0, i;
+    for (i = 0; i < videos.length; i++) total += videos[i].size;
+    $('vstore').textContent = 'Nơi lưu: ' + store.kind + ' · ' + videos.length + ' video · ' + (total / 1048576).toFixed(1) + ' MB' + ' (giữ tối đa ' + MAX_VIDEOS + ' video gần nhất)';
+    $('btnVClear').hidden = !videos.length;
+    if (!videos.length) { var em = D.createElement('p'); em.className = 'sub'; em.textContent = 'Chưa có video. Bấm “Chụp” để hệ thống tự ghi video 5 giây.'; box.appendChild(em); return; }
+    for (i = 0; i < videos.length; i++) {
+      (function (v) {
+        var it = D.createElement('div'); it.className = 'vitem';
+        var hd = D.createElement('div'); hd.className = 'vhead'; hd.textContent = v.slotName + ' · ' + stamp(new Date(v.createdAt));
+        var m1 = D.createElement('div'); m1.className = 'vmeta mono';
+        m1.textContent = fmt1(v.durationMs / 1000, 1) + ' s · ' + kb(v.size) + ' · ' + (v.mime || '?') + ' · ' + (v.w ? v.w + '×' + v.h : '?') + ' · ' + Math.round(v.bps / 1000) + ' kbps · phiên ' + v.session;
+        var m2 = D.createElement('div'); m2.className = 'vmeta mono';
+        m2.textContent = 'video sha256 ' + (v.sha256 && v.sha256.length === 64 ? v.sha256.slice(0, 12) + '…' : '?') + ' · ảnh sha256 ' + (v.photoSha256 ? v.photoSha256.slice(0, 12) + '…' : '?') + (v.hiddenDuring ? ' · tab bị ẩn khi đang ghi' : '');
+        var bt = D.createElement('div'); bt.className = 'vbtns';
+        var mkBtn = function (txt, fn) { var b = D.createElement('button'); b.type = 'button'; b.className = 'btn'; b.textContent = txt; b.addEventListener('click', fn); bt.appendChild(b); };
+        mkBtn('Xem lại', function () { playVideo(v); });
+        mkBtn('Tải về', function () { downloadVideo(v); });
+        mkBtn('Xoá', function () { removeVideo(v.id); });
+        it.appendChild(hd); it.appendChild(m1); it.appendChild(m2); it.appendChild(bt);
+        box.appendChild(it);
+      })(videos[i]);
+    }
+    try {
+      if (navigator.storage && navigator.storage.estimate) navigator.storage.estimate().then(function (e) {
+        if (e && e.quota) $('vstore').textContent += ' · đã dùng ' + (e.usage / 1048576).toFixed(0) + ' / ' + (e.quota / 1048576).toFixed(0) + ' MB dung lượng trình duyệt';
+      });
+    } catch (e2) {}
+  }
+  function initVideo() {
+    $('btnVClear').addEventListener('click', function () {
+      var ok = true; try { ok = window.confirm('Xoá tất cả video bằng chứng đã lưu trên máy này?'); } catch (e) {}
+      if (!ok) return;
+      videos = [];
+      if (store.db) idbClear(function () {});
+      renderVideos(); log('Đã xoá tất cả video lưu tạm');
+    });
+    renderVideos();
+    idbOpen(function (ok) {
+      if (!ok) { store.kind = 'bộ nhớ tạm (không dùng được IndexedDB, tải lại trang sẽ mất)'; renderVideos(); log('IndexedDB không dùng được, video chỉ giữ trong bộ nhớ tạm', 'warn'); return; }
+      store.kind = 'IndexedDB';
+      idbAll(function (list) {
+        if (list) { list.sort(function (a, b) { return a.createdAt < b.createdAt ? 1 : -1; }); videos = list.concat(videos); }
+        renderVideos(); if (list && list.length) log('Đã nạp ' + list.length + ' video lưu từ các lần trước', 'ok');
+      });
+    });
   }
 
   /* ---------- Khởi động ---------- */
@@ -1598,6 +2118,7 @@ textarea.report{width:100%;min-height:200px;margin-top:12px;padding:10px;font-si
     if (env.reasons.length) log('Dấu hiệu: ' + env.reasons.join('; '), env.level === 'webview' ? 'warn' : 'info');
     if (!window.isSecureContext) log('Trang không chạy trên HTTPS, camera sẽ bị chặn', 'bad');
     initEvidence();
+    initVideo();
     checkPermission();
     applyGate();
     refreshReport();

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Menu ứng dụng</title>
+  <style>
+    :root {
+      --bg1: #dbeafe;
+      --bg2: #fce7f3;
+      --text: #0f172a;
+      --muted: #475569;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg1: #0f172a; --bg2: #312e81; --text: #f8fafc; --muted: #cbd5e1; }
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(160deg, var(--bg1), var(--bg2)) fixed;
+      padding: calc(24px + env(safe-area-inset-top)) 20px calc(32px + env(safe-area-inset-bottom));
+    }
+    header { max-width: 960px; margin: 0 auto 28px; }
+    h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+
+    #grid {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px 20px;
+    }
+    @media (min-width: 600px) { #grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 900px) { #grid { grid-template-columns: repeat(4, 1fr); gap: 36px 28px; } }
+
+    .app {
+      display: flex; flex-direction: column; align-items: center;
+      text-decoration: none; color: inherit; outline: none;
+    }
+    .icon {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 22.5%;            /* bo góc kiểu iOS */
+      display: grid; place-items: center;
+      font-size: clamp(48px, 14vw, 84px);
+      background: linear-gradient(145deg, color-mix(in srgb, var(--c) 70%, white), var(--c));
+      box-shadow: 0 10px 24px color-mix(in srgb, var(--c) 40%, transparent),
+                  inset 0 1px 0 rgba(255,255,255,.35);
+      transition: transform .15s ease;
+    }
+    a.app:active .icon { transform: scale(.94); }
+    a.app:focus-visible .icon { outline: 3px solid var(--text); outline-offset: 3px; }
+    @media (hover: hover) { a.app:hover .icon { transform: scale(1.04); } }
+
+    .label { margin-top: 10px; font-size: 15px; font-weight: 600; text-align: center; line-height: 1.25; }
+    .desc  { margin-top: 2px; font-size: 12px; color: var(--muted); text-align: center; }
+
+    .app.soon { cursor: default; }
+    .app.soon .icon { filter: grayscale(.85); opacity: .55; box-shadow: none; }
+    .app.soon .label { color: var(--muted); font-weight: 500; }
+    .badge {
+      position: absolute; right: 8px; top: 8px;
+      background: rgba(15,23,42,.75); color: #fff;
+      font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px;
+    }
+    #msg { max-width: 960px; margin: 0 auto; color: var(--muted); }
+    @media (prefers-reduced-motion: reduce) { .icon { transition: none; } }
+  </style>
+</head>
+<body>
+  <header><h1 id="title">Menu ứng dụng</h1></header>
+  <main id="grid" aria-live="polite"></main>
+  <p id="msg"></p>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const msg = document.getElementById('msg');
+
+    function render(data) {
+      if (data.siteTitle) {
+        document.getElementById('title').textContent = data.siteTitle;
+        document.title = data.siteTitle;
+      }
+      const items = (data.items || [])
+        .filter(i => i.status !== 'hidden')
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+      items.forEach(item => {
+        const soon = item.status !== 'active' || !item.url;
+        const el = document.createElement(soon ? 'div' : 'a');
+        el.className = 'app' + (soon ? ' soon' : '');
+        el.style.setProperty('--c', item.color || '#64748b');
+        if (!soon) el.href = item.url;               // link thường => chuyển trang thật
+        else el.setAttribute('aria-disabled', 'true');
+
+        const icon = document.createElement('div');
+        icon.className = 'icon';
+        icon.textContent = item.icon || '📄';
+        if (soon) {
+          const b = document.createElement('span');
+          b.className = 'badge';
+          b.textContent = 'Sắp ra mắt';
+          icon.appendChild(b);
+        }
+
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.textContent = item.title;
+
+        el.append(icon, label);
+        if (item.description && !soon) {
+          const d = document.createElement('div');
+          d.className = 'desc';
+          d.textContent = item.description;
+          el.appendChild(d);
+        }
+        grid.appendChild(el);
+      });
+    }
+
+    fetch('pages.json', { cache: 'no-cache' })
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(render)
+      .catch(err => {
+        msg.textContent = 'Không tải được pages.json. Hãy mở qua GitHub Pages hoặc localhost (không mở trực tiếp file://).';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>

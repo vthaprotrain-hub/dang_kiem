@@ -1,0 +1,33 @@
+{
+  "siteTitle": "Ứng dụng",
+  "items": [
+    {
+      "id": "tra-cuu-dang-kiem",
+      "title": "Tra cứu đăng kiểm",
+      "url": "tra_cuu_dang_kiem.html",
+      "icon": "🔍",
+      "color": "#2563eb",
+      "status": "active",
+      "description": "Tra cứu thông tin đăng kiểm xe",
+      "order": 1
+    },
+    {
+      "id": "poc-chup-anh-xe",
+      "title": "Chụp ảnh xe",
+      "url": "poc_chup_anh_xe_webview.html",
+      "icon": "📷",
+      "color": "#16a34a",
+      "status": "active",
+      "description": "POC chụp ảnh xe (webview)",
+      "order": 2
+    },
+    { "id": "soon-1", "title": "Coming soon", "url": "", "icon": "✨", "color": "#8b5cf6", "status": "coming_soon", "description": "", "order": 3 },
+    { "id": "soon-2", "title": "Coming soon", "url": "", "icon": "✨", "color": "#ec4899", "status": "coming_soon", "description": "", "order": 4 },
+    { "id": "soon-3", "title": "Coming soon", "url": "", "icon": "✨", "color": "#f59e0b", "status": "coming_soon", "description": "", "order": 5 },
+    { "id": "soon-4", "title": "Coming soon", "url": "", "icon": "✨", "color": "#14b8a6", "status": "coming_soon", "description": "", "order": 6 },
+    { "id": "soon-5", "title": "Coming soon", "url": "", "icon": "✨", "color": "#ef4444", "status": "coming_soon", "description": "", "order": 7 },
+    { "id": "soon-6", "title": "Coming soon", "url": "", "icon": "✨", "color": "#6366f1", "status": "coming_soon", "description": "", "order": 8 },
+    { "id": "soon-7", "title": "Coming soon", "url": "", "icon": "✨", "color": "#0ea5e9", "status": "coming_soon", "description": "", "order": 9 },
+    { "id": "soon-8", "title": "Coming soon", "url": "", "icon": "✨", "color": "#64748b", "status": "coming_soon", "description": "", "order": 10 }
+  ]
+}

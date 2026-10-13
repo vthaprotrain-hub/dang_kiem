@@ -69,16 +69,57 @@ main{max-width:480px;margin:0 auto;padding:0 16px}
 .btn-fill:disabled{opacity:.45;cursor:not-allowed}
 .btn-out:disabled{opacity:.5;cursor:not-allowed}
 
-.verify{position:absolute;top:0;left:0;right:0;bottom:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;border-radius:16px;background:rgba(255,255,255,.95);text-align:center}
-.verify h3{margin:10px 0 4px;font-size:17px;color:var(--teal)}
-.verify p{margin:0 0 10px;font-size:13px;color:var(--muted)}
-.spin{width:38px;height:38px;border-radius:50%;border:4px solid rgba(11,157,150,.2);border-top-color:var(--teal);animation:sp .9s linear infinite}
+.spin{width:38px;height:38px;border-radius:50%;border:4px solid rgba(255,255,255,.25);border-top-color:#fff;animation:sp .9s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.spin{animation:none}}
-.pvbox{width:120px;height:160px;margin:4px 0 10px;border-radius:12px;overflow:hidden;background:#0d1b1f}
-.pvbox video{width:100%;height:100%;object-fit:cover;display:block}
-.bar{width:220px;max-width:80%;height:6px;border-radius:3px;background:rgba(11,157,150,.2);overflow:hidden}
-.bar div{height:100%;width:0;background:var(--teal)}
+.verify{position:fixed;top:0;left:0;right:0;bottom:0;z-index:100;display:flex;padding:14px;background:rgba(6,18,22,.95);overflow:auto;-webkit-overflow-scrolling:touch}
+.vwrap{width:100%;max-width:440px;margin:auto}
+.vwarn{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:#fff3e0;border:1.5px solid #f7a23a;color:#5c3500}
+.vwarn-ico{font-size:22px;line-height:1.2}
+.vwarn-t{font-weight:700;font-size:15px;line-height:1.3}
+.vwarn-s{margin-top:3px;font-size:13px;line-height:1.4}
+.pvbox{position:relative;width:100%;aspect-ratio:3/4;min-height:260px;max-height:62vh;margin:12px 0 10px;border-radius:16px;overflow:hidden;background:#0d1b1f;box-shadow:0 0 0 2px rgba(255,255,255,.22)}
+.pvbox video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;background:#0d1b1f}
+.pv-wait{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#0d1b1f;color:#d7ecea;font-size:14px;text-align:center;padding:12px}
+.pvbox.live .pv-wait{display:none}
+.pv-rec{position:absolute;top:10px;left:10px;padding:4px 10px;border-radius:999px;background:#c62828;color:#fff;font-size:12px;font-weight:700}
+.pv-count{position:absolute;top:8px;right:10px;min-width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:20px;font-weight:800}
+.verify .bar{width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden}
+.verify .bar div{height:100%;width:0;background:#38d3c9}
+.vnote{margin:10px 2px 0;font-size:12.5px;line-height:1.45;color:#d7ecea;text-align:center}
+
+.lock{text-align:center}
+.lock-ico{font-size:42px;line-height:1}
+.lock h2{margin:8px 0 6px}
+.lock-text{margin:0 0 14px;font-size:14px;line-height:1.5;color:var(--muted)}
+.lock-actions{display:grid;gap:10px}
+.btn-solid{min-height:48px;padding:0 16px;border-radius:28px;border:1.5px solid var(--teal);background:var(--teal);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.btn-solid:focus-visible,.chip:focus-visible,.testbar button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.lock-more{margin-top:12px;font-size:12px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px}
+.chip{min-height:36px;padding:0 12px;border-radius:999px;border:1.5px solid var(--teal);background:#fff;color:var(--teal);font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.lock-steps{margin:16px 0 0;padding:12px 14px 12px 34px;border-radius:12px;background:#f3fafa;text-align:left;font-size:13px;line-height:1.55}
+.lock-steps li{margin:4px 0}
+.urlbox{margin-top:12px;padding:8px 10px;border-radius:8px;background:#f3fafa;font-size:11.5px;color:var(--muted);word-break:break-all;text-align:left}
+.lock-test{margin-top:18px;padding-top:14px;border-top:1px dashed #c9dcde}
+.lock-test .btn-out{width:100%}
+.tiny2{margin:6px 0 0;font-size:11.5px;line-height:1.4;color:var(--muted)}
+.testbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 12px;padding:8px 10px;border-radius:10px;background:#fff3e0;color:#7a4a00;font-size:12px;line-height:1.35}
+.testbar button{flex:0 0 auto;min-height:32px;padding:0 10px;border-radius:8px;border:1.5px solid #e07b00;background:#fff;color:#a35700;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.permact{margin-top:10px}
+.permact .btn-out{width:100%;min-height:44px}
+#condBody{padding:0 16px 16px}
+.cverdict{padding:10px 12px;border-radius:10px;font-size:13px;line-height:1.45;background:#e4f6ec;color:var(--ok)}
+.cverdict.bad{background:#fdeaea;color:var(--bad)}
+.cgroup{margin:14px 0 2px;font-size:13px;font-weight:700}
+.crow{display:grid;grid-template-columns:22px 1fr;gap:8px;padding:8px 0;border-bottom:1px solid #e7f1f2;align-items:start}
+.crow .cn{font-weight:600;font-size:13px}
+.crow.hit .cn{color:var(--bad)}
+.crow .cd{font-size:12px;color:var(--muted);word-break:break-word}
+.badge{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:#eef3f4;color:var(--muted);font-size:10px;font-weight:700;vertical-align:middle}
+.badge.strong{background:#fdeaea;color:var(--bad)}
+.badge.weak{background:#fff3e0;color:#8a5200}
+.infonote{margin:10px 0 0;padding:8px 10px;border-radius:8px;background:#fff3e0;color:#7a4a00;font-size:12px}
 
 .done-card{text-align:center;padding:10px 4px}
 .done-card .big{font-size:46px;line-height:1}
@@ -163,8 +204,24 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
 </header>
 
 <main>
+  <section class="card lock" id="lockCard" aria-labelledby="lockTitle" hidden>
+    <div class="lock-ico" aria-hidden="true">🔒</div>
+    <h2 id="lockTitle">Vui lòng mở bằng điện thoại</h2>
+    <p class="lock-text" id="lockText"></p>
+    <div class="lock-actions" id="lockActions"></div>
+    <div class="lock-more" id="lockMore" hidden></div>
+    <p class="msg" id="lockMsg" role="status" aria-live="polite" hidden></p>
+    <div class="urlbox" id="urlBox" hidden></div>
+    <ol class="lock-steps" id="lockSteps"></ol>
+    <div class="lock-test">
+      <button type="button" class="btn-out" id="btnTest">Cho phép truy cập để kiểm thử chụp ảnh</button>
+      <p class="tiny2">Chỉ dùng để kiểm thử. Ảnh chụp trong môi trường này có thể bị chấm điểm thấp hoặc bị từ chối.</p>
+    </div>
+  </section>
+
   <section class="card" id="card">
     <div id="capView">
+      <div class="testbar" id="testBar" hidden><span id="testBarText"></span><button type="button" id="btnExitTest">Thoát</button></div>
       <h2>Chụp ảnh xe</h2>
       <div class="tabs" id="tabs" role="group" aria-label="Chọn góc xe"></div>
       <div class="guide" id="guide"></div>
@@ -172,6 +229,10 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
       <div class="perm" id="perm" hidden>
         <p id="permText"></p>
         <ul id="permList"></ul>
+        <div class="permact" id="permAct" hidden>
+          <button type="button" class="btn-out" id="btnReload">Tải lại trang để xin lại quyền</button>
+          <p class="tiny2" id="reloadHint">Sau khi bật quyền trong Cài đặt trang web, bấm nút này để trang xin quyền lại từ đầu.</p>
+        </div>
       </div>
 
       <div class="row">
@@ -199,18 +260,35 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
       <button type="button" class="btn-out" id="btnDoneBack" style="width:100%">Quay lại</button>
     </div>
 
-    <div class="verify" id="verify" role="status" aria-live="polite" hidden>
-      <div class="spin" aria-hidden="true"></div>
-      <h3 id="vTitle">Đang xác thực ảnh…</h3>
-      <p id="vSub">Vui lòng giữ máy hướng về phía xe.</p>
-      <div class="pvbox" id="pvbox" hidden><video id="pv" playsinline muted autoplay></video></div>
-      <div class="bar" aria-hidden="true"><div id="vFill"></div></div>
+    <div class="verify" id="verify" role="alertdialog" aria-modal="true" aria-labelledby="vTitle" aria-describedby="vSub" hidden>
+      <div class="vwrap">
+        <div class="vwarn">
+          <span class="vwarn-ico" aria-hidden="true">⚠</span>
+          <div>
+            <div class="vwarn-t" id="vTitle">Chúng tôi đang xác minh hình ảnh của bạn</div>
+            <div class="vwarn-s" id="vSub">Đang kiểm tra ảnh vừa chụp…</div>
+          </div>
+        </div>
+        <div class="pvbox" id="pvbox">
+          <video id="pv" playsinline muted autoplay></video>
+          <div class="pv-wait" id="pvWait"><div class="spin" aria-hidden="true"></div><span id="vStep">Đang kiểm tra ảnh…</span></div>
+          <span class="pv-rec" id="pvRec" hidden>● REC</span>
+          <span class="pv-count" id="vCount" hidden>3</span>
+        </div>
+        <div class="bar" aria-hidden="true"><div id="vFill"></div></div>
+        <p class="vnote">Video 3 giây đang được ghi lại làm bằng chứng xác minh. Vui lòng giữ nguyên máy, hướng camera vào xe và không thoát khỏi trang.</p>
+      </div>
     </div>
   </section>
 
   <details class="trust" id="trust">
     <summary><span>Xem điểm tin cậy</span><span class="sumscore" id="sumScore" hidden></span></summary>
     <div id="trustBody"><p class="tiny" style="margin-top:0">Chưa có lần chụp nào.</p></div>
+  </details>
+
+  <details class="trust conds" id="conds" hidden>
+    <summary><span>Điều kiện kiểm soát truy cập</span></summary>
+    <div id="condBody"></div>
   </details>
 </main>
 
@@ -265,8 +343,9 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
   var isAndroid = /Android/i.test(UA);
   var isHarmony = /HarmonyOS|OpenHarmony/i.test(UA);
   var isIOS = /iPhone|iPad|iPod/i.test(UA) || (/Macintosh/i.test(UA) && (navigator.maxTouchPoints || 0) > 1);
+  var isCrOS = /CrOS/i.test(UA);
   var mobileUA = isIOS || isAndroid || isHarmony;
-  var OSNAME = isIOS ? 'iOS' : (isAndroid ? 'Android' : (isHarmony ? 'HarmonyOS' : (/Windows/i.test(UA) ? 'Windows' : (/Mac/i.test(UA) ? 'macOS' : (/Linux/i.test(UA) ? 'Linux' : 'không rõ')))));
+  var OSNAME = isIOS ? 'iOS' : (isAndroid ? 'Android' : (isHarmony ? 'HarmonyOS' : (isCrOS ? 'ChromeOS' : /Windows/i.test(UA) ? 'Windows' : (/Mac/i.test(UA) ? 'macOS' : (/Linux/i.test(UA) ? 'Linux' : 'không rõ')))));
 
   var VIRTUAL_CAM = /\bobs\b|virtual|manycam|snap camera|xsplit|droidcam|iriun|epoccam|ivcam|camo studio|splitcam|vcam|e2esoft|webcamoid|ndi video|nvidia broadcast|screen capture/i;
   var GPU_EMU = /swiftshader|llvmpipe|softpipe|software|microsoft basic|mesa offscreen|android emulator|translator|virtualbox|vmware|parallels/i;
@@ -278,7 +357,7 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
   var cur = 0;                 // góc đang chụp
   var photos = {};             // ảnh đã được chấp nhận theo góc
   var attempts = [];           // lịch sử các lần chụp (mới nhất ở đầu)
-  var busy = false, expired = false;
+  var busy = false, expired = false, captureActive = false;
   var capSlotIdx = 0, capPointer = 'không rõ';
   var ptr = { type: null, t: 0 };
   var EV = { gpu: null, uaData: null };
@@ -363,7 +442,7 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
   /* ---------- Quyền: camera, vị trí, cảm biến ---------- */
   var motionSupported = typeof DeviceMotionEvent !== 'undefined';
   var motionNeedsPrompt = motionSupported && typeof DeviceMotionEvent.requestPermission === 'function';
-  var perm = { camera: 'unknown', geo: 'unknown', motion: motionSupported ? (motionNeedsPrompt ? 'prompt' : 'granted') : 'unsupported', asked: false, working: false, secure: !!window.isSecureContext };
+  var perm = { camera: 'unknown', geo: 'unknown', motion: motionSupported ? (motionNeedsPrompt ? 'prompt' : 'granted') : 'unsupported', asked: false, working: false, fails: 0, queried: false, apiDenied: { camera: false, geo: false }, secure: !!window.isSecureContext };
   var PERM_LABEL = { camera: 'Camera', geo: 'Vị trí', motion: 'Cảm biến chuyển động' };
 
   function permOk(k) { var v = perm[k]; return v === 'granted' || v === 'unsupported'; }
@@ -410,12 +489,13 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
 
   function queryPerms() {
     return new Promise(function (resolve) {
-      if (!navigator.permissions || !navigator.permissions.query) { resolve(); return; }
+      if (!navigator.permissions || !navigator.permissions.query) { perm.queried = true; resolve(); return; }
       var map = [['camera', 'camera'], ['geolocation', 'geo']], left = map.length;
-      var fin = function () { if (--left === 0) resolve(); };
+      var fin = function () { if (--left === 0) { perm.queried = true; resolve(); } };
       map.forEach(function (m) {
         try {
           navigator.permissions.query({ name: m[0] }).then(function (st) {
+            perm.apiDenied[m[1]] = st.state === 'denied';
             if (m[1] === 'camera' && perm.camera === 'granted' && st.state === 'prompt') { /* giữ trạng thái đã cấp trong phiên */ }
             else perm[m[1]] = st.state;
             st.onchange = function () { queryPerms().then(afterPermChange); };
@@ -465,25 +545,34 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
     } else if (motionSupported) { perm.motion = 'granted'; startMotion(); }
     jobs.push(requestGeo()); jobs.push(requestCam());
     Promise.all(jobs).then(function () { return queryPerms(); }).then(function () {
-      perm.working = false; afterPermChange();
+      perm.working = false;
+      if (allGranted()) perm.fails = 0; else perm.fails++;
+      afterPermChange();
       if (allGranted()) showMsg('ok', 'Đã cấp đủ quyền. Bạn có thể chụp ảnh.'); else showMsg('', '');
     });
   }
 
   function renderPerm() {
-    var box = $('perm'), ok = allGranted();
+    var box = $('perm'), ok = allGranted() || !captureActive;
     var cap = $('capWrap'), pb = $('btnPerm');
-    box.hidden = ok; cap.hidden = !ok; pb.hidden = ok;
     var fileInp = $('fileCap'); fileInp.disabled = busy || expired;
+    if (!captureActive) { box.hidden = true; return; }
+    box.hidden = ok; cap.hidden = !ok; pb.hidden = ok;
     cap.className = 'cap' + ((busy || expired) ? ' off' : '');
     if (ok) return;
-    var miss = missing(), names = [], i, denied = false;
-    for (i = 0; i < miss.length; i++) { names.push(PERM_LABEL[miss[i]]); if (perm[miss[i]] === 'denied') denied = true; }
+    var miss = missing(), names = [], i;
+    for (i = 0; i < miss.length; i++) names.push(PERM_LABEL[miss[i]]);
+    var apiBlocked = perm.apiDenied.camera || perm.apiDenied.geo;
+    var blocked = !perm.working && perm.secure && (apiBlocked || perm.fails >= 2);
+    var howto = isIOS ? 'Trên iPhone: bấm biểu tượng “aA” cạnh thanh địa chỉ → Cài đặt trang web → chọn “Cho phép” cho Camera và Vị trí.'
+                      : 'Bấm biểu tượng ổ khóa (hoặc ⓘ) cạnh thanh địa chỉ → Quyền → chọn “Cho phép” cho Camera và Vị trí.';
+    if (miss.indexOf('motion') >= 0 && isIOS) howto += ' Với Cảm biến chuyển động: đóng hẳn tab Safari rồi mở lại liên kết để được hỏi lại.';
     var txt;
     if (!perm.secure) txt = 'Trang cần chạy trên HTTPS để dùng camera và vị trí. Hãy mở lại bằng đường dẫn https://.';
-    else if (!perm.asked) txt = 'Để chụp ảnh, hệ thống cần quyền Camera, Vị trí và Cảm biến chuyển động. Bấm “Cấp quyền” rồi chọn “Cho phép”.';
     else if (perm.working) txt = 'Đang chờ bạn chọn “Cho phép” trên hộp thoại của trình duyệt…';
-    else txt = 'Chưa cấp đủ quyền: ' + names.join(', ') + '. Bấm “Xin quyền lại”. Nếu trình duyệt không hiện hộp thoại, hãy bật quyền trong Cài đặt trang web (biểu tượng ổ khóa cạnh thanh địa chỉ), rồi quay lại trang này.' + (miss.indexOf('camera') >= 0 && perm.camera === 'unavailable' ? ' Không tìm thấy camera trên thiết bị.' : '');
+    else if (blocked) txt = 'Trình duyệt đang chặn quyền: ' + (names.length ? names.join(', ') : 'Camera, Vị trí') + '. ' + howto + ' Sau đó bấm “Tải lại trang để xin lại quyền”.';
+    else if (!perm.asked) txt = 'Để chụp ảnh, hệ thống cần quyền Camera, Vị trí và Cảm biến chuyển động. Bấm “Cấp quyền” rồi chọn “Cho phép”.';
+    else txt = 'Chưa cấp đủ quyền: ' + names.join(', ') + '. Bấm “Xin quyền lại” và chọn “Cho phép”.' + (miss.indexOf('camera') >= 0 && perm.camera === 'unavailable' ? ' Không tìm thấy camera trên thiết bị.' : '');
     $('permText').textContent = txt;
     var ul = $('permList'); ul.textContent = '';
     ['camera', 'geo', 'motion'].forEach(function (k) {
@@ -494,7 +583,7 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
     });
     pb.textContent = perm.working ? 'Đang xin quyền…' : (perm.asked ? 'Xin quyền lại' : 'Cấp quyền');
     pb.disabled = perm.working || !perm.secure;
-    if (denied && !perm.working) pb.setAttribute('aria-describedby', 'permText');
+    $('permAct').hidden = !blocked;
   }
 
   /* ---------- Đồng hồ máy chủ ---------- */
@@ -656,7 +745,7 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
     return '';
   }
   function stopStream(s) { try { s.getTracks().forEach(function (t) { t.stop(); }); } catch (e) {} }
-  function recordClip(ms, onTick) {
+  function recordClip(ms, onTick, onLive) {
     return new Promise(function (resolve) {
       var info = { state: 'error', error: '', mime: '', bps: 0, w: 0, h: 0, fps: null, durationMs: 0, size: 0, hiddenDuring: false, label: '', facing: '', settings: null, capabilities: null, openMs: 0, blob: null };
       if (typeof MediaRecorder === 'undefined') { info.state = 'unsupported'; info.error = 'Trình duyệt không hỗ trợ ghi video (MediaRecorder).'; resolve(info); return; }
@@ -678,7 +767,9 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
         info.w = st.width || 0; info.h = st.height || 0; info.fps = st.frameRate || null; info.openMs = Date.now() - t0;
         try { info.capabilities = tr.getCapabilities ? pickJson(tr.getCapabilities()) : null; } catch (e1) {}
         var pv = $('pv');
-        try { pv.srcObject = stream; var pp = pv.play(); if (pp && pp.catch) pp.catch(noop); } catch (e2) {}
+        var liveDone = false, live = function () { if (!liveDone) { liveDone = true; if (onLive) onLive(); } };
+        try { pv.onplaying = live; pv.srcObject = stream; var pp = pv.play(); if (pp && pp.catch) pp.catch(noop); } catch (e2) {}
+        setTimeout(live, 900);
         var h = st.height || 720, bps = h >= 1000 ? 1500000 : (h >= 700 ? 1100000 : 700000);
         var mime = pickMime(), mr, chunks = [];
         var opts = { videoBitsPerSecond: bps }; if (mime) opts.mimeType = mime;
@@ -870,6 +961,7 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
       device: { ua: UA, os: OSNAME, platform: navigator.platform, maxTouchPoints: navigator.maxTouchPoints || 0, userAgentData: EV.uaData, gpu: EV.gpu,
         screen: { w: scr.width, h: scr.height, dpr: window.devicePixelRatio || 1 }, timeZone: (function () { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return null; } })() },
       permissions: { camera: perm.camera, geo: perm.geo, motion: perm.motion },
+      access: accessEvidence(),
       photo: { name: att.native.name, type: att.native.type, sizeBytes: att.native.sizeBytes, w: att.image.w, h: att.image.h, avgLuma: att.image.luma, sha256: att.photoHash, pointer: att.pointer },
       time: { createdFrom: att.native.createdFrom, createdAt: att.native.createdAt, modifiedAt: att.native.modifiedAt, receivedAt: att.native.receivedAt, ageCreatedMs: att.native.ageCreatedMs, ageModifiedMs: att.native.ageModifiedMs, verdict: att.native.verdict,
         clock: { state: clockInfo.state, skewMs: clockInfo.skew, rttMs: clockInfo.rtt, serverDate: clockInfo.server } },
@@ -881,16 +973,25 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
 
   /* ---------- Luồng xác thực sau khi nhận ảnh ---------- */
   function setBusy(b) { busy = b; renderAll(); }
-  function showVerify(title, sub, withPreview) {
-    $('verify').hidden = false; $('vTitle').textContent = title; $('vSub').textContent = sub;
-    $('pvbox').hidden = !withPreview; $('vFill').style.width = '0%';
+  var VSUB_WAIT = 'Đang kiểm tra ảnh vừa chụp…';
+  function setVerifyWait(step, sub) {
+    $('pvbox').className = 'pvbox'; $('pvRec').hidden = true; $('vCount').hidden = true;
+    $('vStep').textContent = step; $('vSub').textContent = sub || VSUB_WAIT;
   }
-  function hideVerify() { $('verify').hidden = true; }
+  function showVerify(step) {
+    $('verify').hidden = false; $('vFill').style.width = '0%';
+    setVerifyWait(step, VSUB_WAIT);
+    try { $('verify').scrollTop = 0; } catch (e) {}
+  }
+  function hideVerify() { $('verify').hidden = true; $('pvbox').className = 'pvbox'; }
+  function onClipLive() {
+    $('pvbox').className = 'pvbox live'; $('pvRec').hidden = false; $('vCount').hidden = false;
+    $('vSub').textContent = 'Đang ghi video 3 giây làm bằng chứng. Vui lòng giữ máy hướng về phía xe.';
+  }
   function onClipTick(el) {
     var left = Math.max(0, Math.ceil((CFG.CLIP_MS - el) / 1000));
     $('vFill').style.width = Math.min(100, el / CFG.CLIP_MS * 100) + '%';
-    var t = 'Giữ máy hướng về phía xe… còn ' + left + ' giây';
-    if ($('vSub').textContent !== t) $('vSub').textContent = t;
+    if ($('vCount').textContent !== String(left)) $('vCount').textContent = String(left);
   }
 
   function startVerify(f) {
@@ -898,14 +999,15 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
     try { url = URL.createObjectURL(f); } catch (e) { showMsg('bad', 'Không đọc được ảnh vừa chụp. Vui lòng chụp lại.'); return; }
     showMsg('', '');
     setBusy(true);
-    showVerify('Đang xác thực ảnh…', 'Đang kiểm tra ảnh vừa chụp', false);
+    showVerify('Đang kiểm tra ảnh…');
     var att = { id: 'a' + recvAt.toString(36) + Math.floor(Math.random() * 1296).toString(36), slotKey: s.k, slotName: s.n, recvAt: recvAt, pointer: capPointer };
     Promise.all([analyzeNative(f, recvAt), loadImage(url), sha256(f)]).then(function (r) {
       att.native = r[0]; att.image = r[1]; att.photoHash = r[2];
-      showVerify('Đang xác thực ảnh…', 'Giữ máy hướng về phía xe… còn 3 giây', true);
-      return recordClip(CFG.CLIP_MS, onClipTick);
+      setVerifyWait('Đang mở camera…', 'Chuẩn bị ghi video xác minh. Vui lòng giữ máy hướng về phía xe.');
+      return recordClip(CFG.CLIP_MS, onClipTick, onClipLive);
     }).then(function (clip) {
       att.video = clip;
+      setVerifyWait('Đang chấm điểm tin cậy…', 'Đã ghi xong video. Chúng tôi đang xác minh hình ảnh của bạn…');
       if (clip.state !== 'done' && /NotAllowedError|SecurityError|PermissionDenied/.test(clip.error || '')) perm.camera = 'denied';
       return clip.blob ? sha256(clip.blob) : Promise.resolve(null);
     }).then(function (vh) {
@@ -945,6 +1047,239 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
     hideVerify(); setBusy(false); renderTrust();
   }
 
+  /* ---------- Kiểm soát truy cập: máy tính và webview ---------- */
+  var APP_TOKENS = [
+    ['Messenger', /Messenger|MessengerForiOS|FBAN\/Orca/i], ['Facebook', /FBAN|FBAV|FB_IAB|FBIOS|FB4A|FBSS/i],
+    ['Instagram', /Instagram/i], ['Zalo', /\bZalo(App)?\b|ZaloPay|ZaloMiniApp/i], ['MoMo', /\bMoMo/i],
+    ['TikTok', /musical_ly|BytedanceWebview|TikTok|trill_/i], ['Line', /\bLine\/|LIFF/i], ['Viber', /Viber/i],
+    ['Telegram', /Telegram/i], ['Snapchat', /Snapchat/i], ['Twitter / X', /Twitter/i], ['LinkedIn', /LinkedInApp/i],
+    ['Pinterest', /Pinterest/i], ['WeChat', /MicroMessenger|WeChat/i], ['KakaoTalk', /KAKAOTALK/i], ['Naver', /NAVER\(inapp/i],
+    ['Ứng dụng Google', /\bGSA\//i], ['Shopee', /Shopee/i], ['Lazada', /Lazada/i], ['Grab', /\bGrab/i], ['Discord', /Discord/i], ['Electron', /Electron/i]
+  ];
+  var BRIDGES = ['Android', 'AndroidInterface', 'AndroidBridge', 'JSInterface', 'jsInterface', 'jsBridge', 'JSBridge', 'WebViewJavascriptBridge', 'nativeBridge', 'NativeBridge',
+    'ZaloJavaScriptInterface', 'ZaloPayJSBridge', 'cordova', 'Capacitor', 'PhoneGap', 'ionic', '__wxjs_environment', 'liff', 'mraid', 'webviewApi'];
+  var ACCESS = { kind: 'ok', rows: [], app: '', bypass: false, dStrong: 0, dWeak: 0, wStrong: 0, wWeak: 0, reasons: [] };
+  var navigate = function (u) { window.location.href = u; };
+  var reloadFn = function () { window.location.reload(); };
+
+  function mq(q) { try { return window.matchMedia ? window.matchMedia(q).matches : null; } catch (e) { return null; } }
+  function yn(v) { return v === null || v === undefined ? 'không đọc được' : (v ? 'có' : 'không'); }
+  function curUrl() { return window.location.href.split('#')[0]; }
+
+  function detectAccess() {
+    var rows = [], touch = navigator.maxTouchPoints || 0, plat = navigator.platform || '', uad = null, i;
+    try { uad = navigator.userAgentData || null; } catch (e) {}
+    var uadPlat = uad ? (uad.platform || '') : '', uadMobile = uad && typeof uad.mobile === 'boolean' ? uad.mobile : null;
+    var brands = []; try { if (uad && uad.brands) for (i = 0; i < uad.brands.length; i++) brands.push(uad.brands[i].brand + ' ' + uad.brands[i].version); } catch (e1) {}
+    var fine = mq('(pointer: fine)'), coarse = mq('(pointer: coarse)'), hover = mq('(hover: hover)'), anyCoarse = mq('(any-pointer: coarse)');
+    var standalone = (navigator.standalone === true) || mq('(display-mode: standalone)') === true;
+    var gr = (EV.gpu && EV.gpu.ok) ? String(EV.gpu.renderer || '') : '';
+    var scr = window.screen || {}, dpr = window.devicePixelRatio || 1;
+    var platDesktop = /^Win/i.test(plat) || (/^Mac/i.test(plat) && touch <= 1) || /Linux (x86|i\d86)|X11|CrOS/i.test(plat);
+    var inFrame = false; try { inFrame = window.top !== window.self; } catch (e2) { inFrame = true; }
+    function add(group, id, label, value, hit, strength) { rows.push({ group: group, id: id, label: label, value: value, hit: !!hit, strength: strength }); }
+
+    /* --- Máy tính --- */
+    var uaDesktop = !mobileUA && (/Windows NT|Win64|Win32|WOW64|Macintosh|Mac OS X|X11|CrOS|Linux/i.test(UA));
+    add('desktop', 'd_os', 'Hệ điều hành trong User-Agent', OSNAME + (uaDesktop ? ' (hệ điều hành máy tính)' : ''), uaDesktop, 'strong');
+    var uadTxt = uad ? ('mobile=' + uadMobile + ', platform=' + (uadPlat || '?')) : 'trình duyệt không hỗ trợ userAgentData';
+    add('desktop', 'd_uad', 'userAgentData (mobile / platform)', uadTxt, uad && (uadMobile === false || /^(Windows|macOS|Linux|Chrome OS|ChromeOS)$/i.test(uadPlat)), 'strong');
+    add('desktop', 'd_plat', 'navigator.platform', plat || '(trống)', platDesktop, 'strong');
+    add('desktop', 'd_mismatch', 'User-Agent di động nhưng nền tảng là máy tính (giả lập thiết bị trong DevTools)', 'UA ' + (mobileUA ? 'di động' : 'không phải di động') + ' · platform ' + (plat || '?'), mobileUA && platDesktop, 'strong');
+    add('desktop', 'd_touch', 'Số điểm chạm tối đa (maxTouchPoints)', String(touch), touch === 0, 'strong');
+    add('desktop', 'd_webdriver', 'Trình duyệt bị điều khiển tự động (navigator.webdriver)', yn(navigator.webdriver === true), navigator.webdriver === true, 'strong');
+    add('desktop', 'd_mobiletoken', 'User-Agent có token “Mobile”', yn(/Mobi/i.test(UA)), !/Mobi/i.test(UA) && !isIOS, 'weak');
+    var hasTouchEvt = 'ontouchstart' in window;
+    add('desktop', 'd_touchevt', 'Hỗ trợ sự kiện cảm ứng (ontouchstart)', yn(hasTouchEvt), !hasTouchEvt, 'weak');
+    add('desktop', 'd_pointer', 'Thiết bị trỏ chính là chuột (pointer: fine)', 'fine=' + yn(fine) + ', coarse=' + yn(coarse), fine === true, 'weak');
+    add('desktop', 'd_hover', 'Hỗ trợ di chuột (hover: hover)', yn(hover), hover === true, 'weak');
+    add('desktop', 'd_anycoarse', 'Có thiết bị trỏ cảm ứng nào không (any-pointer: coarse)', yn(anyCoarse), anyCoarse === false, 'weak');
+    var big = Math.max(scr.width || 0, scr.height || 0);
+    add('desktop', 'd_screen', 'Kích thước màn hình', (scr.width || '?') + '×' + (scr.height || '?') + ' @' + dpr + 'x, cửa sổ ' + window.innerWidth + '×' + window.innerHeight, big >= 1280, 'weak');
+    var gDesk = gr && (GPU_DESKTOP.test(gr) || GPU_EMU.test(gr));
+    add('desktop', 'd_gpu', 'GPU (WebGL renderer)', gr || 'không đọc được', gDesk, 'weak');
+    add('desktop', 'd_motion', 'Có API cảm biến chuyển động (DeviceMotionEvent)', yn(motionSupported), !motionSupported, 'weak');
+    add('desktop', 'd_cpu', 'Số nhân CPU / RAM (tham khảo)', (navigator.hardwareConcurrency || '?') + ' nhân / ' + (navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'không rõ'), false, 'info');
+
+    /* --- Webview --- */
+    add('webview', 'w_wv', 'User-Agent có “; wv)” (Android WebView)', yn(/; wv\)/i.test(UA)), /; wv\)/i.test(UA), 'strong');
+    var verChrome = isAndroid && /Version\/\d+\.\d+/.test(UA) && /Chrome\//.test(UA);
+    add('webview', 'w_version', 'Android: “Version/x.x” đi cùng “Chrome/” (WebView kiểu cũ)', yn(verChrome), verChrome, 'strong');
+    var brandWv = false; for (i = 0; i < brands.length; i++) if (/Android WebView/i.test(brands[i])) brandWv = true;
+    add('webview', 'w_brands', 'userAgentData.brands có “Android WebView”', brands.length ? brands.join(', ') : 'không hỗ trợ', brandWv, 'strong');
+    var app = ''; for (i = 0; i < APP_TOKENS.length; i++) if (APP_TOKENS[i][1].test(UA)) { app = APP_TOKENS[i][0]; break; }
+    add('webview', 'w_app', 'User-Agent có dấu hiệu ứng dụng khác (Facebook, Zalo, TikTok, Instagram, Line…)', app || 'không thấy', !!app, 'strong');
+    var iosNoSafari = isIOS && /Mobile\//.test(UA) && !/Safari\//.test(UA) && !standalone;
+    add('webview', 'w_ios', 'iOS: User-Agent không có “Safari/” (WKWebView / trình duyệt trong ứng dụng)', isIOS ? yn(!/Safari\//.test(UA)) : 'không phải iOS', iosNoSafari, 'strong');
+    add('webview', 'w_rn', 'window.ReactNativeWebView', yn(typeof window.ReactNativeWebView !== 'undefined'), typeof window.ReactNativeWebView !== 'undefined', 'strong');
+    add('webview', 'w_flutter', 'window.flutter_inappwebview', yn(typeof window.flutter_inappwebview !== 'undefined'), typeof window.flutter_inappwebview !== 'undefined', 'strong');
+    var wk = false; try { wk = !!(window.webkit && window.webkit.messageHandlers); } catch (e3) {}
+    add('webview', 'w_wk', 'iOS: window.webkit.messageHandlers (cầu nối ứng dụng)', yn(wk), wk, 'strong');
+    var found = []; for (i = 0; i < BRIDGES.length; i++) { try { if (typeof window[BRIDGES[i]] !== 'undefined') found.push(BRIDGES[i]); } catch (e4) {} }
+    add('webview', 'w_bridge', 'Đối tượng cầu nối JavaScript do ứng dụng gắn vào (Android, jsBridge, cordova, Capacitor…)', found.length ? found.join(', ') : 'không thấy', found.length > 0, 'strong');
+    var chromeMissing = isAndroid && /Chrome\//.test(UA) && !/SamsungBrowser|OPR\/|EdgA|Firefox/i.test(UA) && !window.chrome;
+    add('webview', 'w_chrome', 'Android: User-Agent là Chrome nhưng không có window.chrome', isAndroid ? yn(!window.chrome) : 'không áp dụng', chromeMissing, 'weak');
+    var ref = D.referrer || '';
+    add('webview', 'w_ref', 'Mở từ ứng dụng khác (document.referrer bắt đầu bằng android-app://)', ref || '(trống)', /^android-app:\/\//i.test(ref), 'weak');
+    add('webview', 'w_frame', 'Trang đang nằm trong iframe / khung nhúng', yn(inFrame), inFrame, 'weak');
+    add('webview', 'w_standalone', 'Chạy như ứng dụng cài từ trình duyệt (PWA / màn hình chính, không phải webview)', yn(standalone), false, 'info');
+    add('webview', 'w_xrw', 'Header X-Requested-With (Android WebView gửi tên gói ứng dụng)', 'chỉ kiểm tra được ở máy chủ, trang web không đọc được', false, 'info');
+
+    var dS = 0, dW = 0, wS = 0, wW = 0;
+    for (i = 0; i < rows.length; i++) {
+      var r = rows[i]; if (!r.hit) continue;
+      if (r.group === 'desktop') { if (r.strength === 'strong') dS++; else if (r.strength === 'weak') dW++; }
+      else { if (r.strength === 'strong') wS++; else if (r.strength === 'weak') wW++; }
+    }
+    var isDesktop = dS >= 1 || dW >= 3, isWebview = wS >= 1 || wW >= 2;
+    var kind = isDesktop ? 'desktop' : (isWebview ? 'webview' : 'ok');
+    var reasons = [];
+    for (i = 0; i < rows.length; i++) if (rows[i].hit && rows[i].group === (kind === 'desktop' ? 'desktop' : 'webview') && rows[i].strength !== 'info') reasons.push(rows[i].label);
+    if (!app && /; wv\)|Version\/\d/.test(UA) && isAndroid) app = 'WebView của ứng dụng khác';
+    ACCESS.rows = rows; ACCESS.kind = kind; ACCESS.app = app; ACCESS.dStrong = dS; ACCESS.dWeak = dW; ACCESS.wStrong = wS; ACCESS.wWeak = wW; ACCESS.reasons = reasons;
+    ACCESS.rule = 'Máy tính: ≥ 1 dấu hiệu mạnh hoặc ≥ 3 dấu hiệu yếu. Webview: ≥ 1 dấu hiệu mạnh hoặc ≥ 2 dấu hiệu yếu.';
+  }
+
+  function accessEvidence() {
+    var d = [], w = [];
+    for (var i = 0; i < ACCESS.rows.length; i++) { var r = ACCESS.rows[i]; if (r.hit) (r.group === 'desktop' ? d : w).push(r.id); }
+    return { kind: ACCESS.kind, bypass: ACCESS.bypass, app: ACCESS.app, desktopHits: d, webviewHits: w };
+  }
+
+  /* --- Bỏ qua khoá để kiểm thử (giữ qua lần tải lại trang) --- */
+  function persistBypass(on) {
+    try { if (on) sessionStorage.setItem('bhvc_test_access', '1'); else sessionStorage.removeItem('bhvc_test_access'); return true; } catch (e) { return false; }
+  }
+  function readBypass() {
+    try { if (sessionStorage.getItem('bhvc_test_access') === '1') return true; } catch (e) {}
+    return /[?&]_t=1(&|$)/.test(location.search);
+  }
+  function reloadPage() {
+    if (ACCESS.bypass && !persistBypass(true) && !/[?&]_t=1/.test(location.search)) {
+      var sep = location.search ? '&' : '?';
+      navigate(curUrl() + sep + '_t=1'); return;
+    }
+    reloadFn();
+  }
+
+  /* --- Mở bằng trình duyệt ngoài --- */
+  function extLinks() {
+    var u = curUrl(), noScheme = u.replace(/^https?:\/\//i, ''), scheme = location.protocol.replace(':', '') || 'https';
+    var intent = function (pkg) { return 'intent://' + noScheme + '#Intent;scheme=' + scheme + ';action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;' + (pkg ? 'package=' + pkg + ';' : '') + 'end'; };
+    if (isAndroid) return {
+      main: { label: 'Mở bằng trình duyệt ngoài', url: intent('') },
+      others: [['Chrome', intent('com.android.chrome')], ['Samsung Internet', intent('com.sec.android.app.sbrowser')], ['Firefox', intent('org.mozilla.firefox')], ['Edge', intent('com.microsoft.emmx')], ['Cốc Cốc', intent('com.coccoc.trinhduyet')]]
+    };
+    if (isIOS) return {
+      main: { label: 'Mở bằng Safari', url: 'x-safari-' + scheme + '://' + noScheme },
+      others: [['Chrome', 'googlechrome' + (scheme === 'https' ? 's' : '') + '://' + noScheme], ['Firefox', 'firefox://open-url?url=' + encodeURIComponent(u)], ['Edge', 'microsoft-edge-' + scheme + '://' + noScheme]]
+    };
+    return { main: null, others: [] };
+  }
+
+  function mkBtn(cls, text, fn) { var b = D.createElement('button'); b.type = 'button'; b.className = cls; b.textContent = text; b.addEventListener('click', fn); return b; }
+  function lockMsg(kind, text) { var m = $('lockMsg'); if (!text) { m.hidden = true; return; } m.hidden = false; m.className = 'msg ' + kind; m.textContent = text; }
+  function copyLink() {
+    copyText(curUrl(), function (ok) { lockMsg(ok ? 'ok' : 'warn', ok ? 'Đã sao chép liên kết. Hãy dán vào trình duyệt (Chrome, Safari…).' : 'Không sao chép tự động được. Hãy nhấn giữ vào liên kết bên dưới để sao chép.'); });
+    $('urlBox').hidden = false; $('urlBox').textContent = curUrl();
+  }
+  function tryOpen(url, name) {
+    lockMsg('', '');
+    navigate(url);
+    setTimeout(function () { if (!D.hidden) lockMsg('warn', 'Chưa mở được ' + name + '. Hãy chọn trình duyệt khác, làm theo hướng dẫn bên dưới hoặc sao chép liên kết.'); }, 2200);
+  }
+
+  function appStep() {
+    var a = ACCESS.app;
+    if (/Facebook|Messenger/.test(a)) return 'Trong ' + a + ': bấm ⋯ ở góc trên bên phải → “Mở trong trình duyệt”.';
+    if (/Zalo/.test(a)) return 'Trong Zalo: bấm ⋮ hoặc ⋯ ở góc trên → “Mở bằng trình duyệt”.';
+    if (/Instagram/.test(a)) return 'Trong Instagram: bấm ⋯ ở góc trên bên phải → “Mở trong trình duyệt hệ thống”.';
+    if (/TikTok/.test(a)) return 'Trong TikTok: bấm ⋯ ở góc trên bên phải → “Mở trong trình duyệt”.';
+    return 'Tìm mục “Mở bằng trình duyệt” (Open in browser) trong menu ⋯ hoặc ⋮ của ứng dụng' + (a ? ' ' + a : '') + '.';
+  }
+
+  function renderLock() {
+    var k = ACCESS.kind, actions = $('lockActions'), steps = $('lockSteps'), more = $('lockMore');
+    actions.textContent = ''; steps.textContent = ''; more.textContent = ''; more.hidden = true; lockMsg('', ''); $('urlBox').hidden = true;
+    function li(t) { var e = D.createElement('li'); e.textContent = t; steps.appendChild(e); }
+    if (k === 'desktop') {
+      $('lockTitle').textContent = 'Vui lòng mở bằng điện thoại';
+      $('lockText').textContent = 'Liên kết này cần chụp ảnh xe trực tiếp bằng điện thoại. Trình duyệt trên máy tính không được hỗ trợ nên đã bị khoá.';
+      actions.appendChild(mkBtn('btn-solid', 'Sao chép liên kết để gửi sang điện thoại', copyLink));
+      li('Bấm “Sao chép liên kết”, rồi gửi sang điện thoại (Zalo, tin nhắn, email…).');
+      li('Trên điện thoại, mở liên kết bằng Safari (iPhone) hoặc Chrome (Android), không mở trong khung chat của ứng dụng.');
+      li('Khi được hỏi, chọn “Cho phép” Camera, Vị trí và Cảm biến chuyển động.');
+      return;
+    }
+    $('lockTitle').textContent = 'Vui lòng mở bằng trình duyệt';
+    $('lockText').textContent = 'Bạn đang mở liên kết trong ' + (ACCESS.app ? ACCESS.app + ' (webview)' : 'ứng dụng khác (webview)') + '. Webview thường chặn camera, vị trí và cảm biến nên không thể chụp ảnh xác thực.';
+    var ext = extLinks();
+    if (ext.main) actions.appendChild(mkBtn('btn-solid', ext.main.label, function () { tryOpen(ext.main.url, isIOS ? 'Safari' : 'trình duyệt'); }));
+    actions.appendChild(mkBtn('btn-out', 'Sao chép liên kết', copyLink));
+    if (ext.others.length) {
+      more.hidden = false; more.appendChild(D.createTextNode('Hoặc chọn trình duyệt khác (cần đã cài trên máy):'));
+      var chips = D.createElement('div'); chips.className = 'chips';
+      ext.others.forEach(function (o) { chips.appendChild(mkBtn('chip', o[0], function () { tryOpen(o[1], o[0]); })); });
+      more.appendChild(chips);
+    }
+    if (isIOS) {
+      li('Bấm “Mở bằng Safari”. Nếu không có gì xảy ra, hãy làm bước 2.');
+      li(appStep() + ' Hoặc bấm biểu tượng chia sẻ → “Mở trong Safari”.');
+    } else {
+      li('Bấm “Mở bằng trình duyệt ngoài”. Nếu hiện hộp thoại chọn ứng dụng, chọn Chrome hoặc Samsung Internet.');
+      li('Nếu không mở được: ' + appStep());
+    }
+    li('Hoặc bấm “Sao chép liên kết”, mở Chrome/Safari, dán vào thanh địa chỉ rồi truy cập.');
+    li('Trong trình duyệt, bấm “Cấp quyền” và chọn “Cho phép” Camera, Vị trí, Cảm biến.');
+  }
+
+  function renderConds() {
+    var body = $('condBody'); body.textContent = '';
+    if (ACCESS.kind === 'ok') return;
+    var v = mk('div', 'cverdict bad');
+    v.textContent = (ACCESS.kind === 'desktop' ? 'Kết luận: truy cập từ máy tính → khoá. ' : 'Kết luận: truy cập từ webview' + (ACCESS.app ? ' (' + ACCESS.app + ')' : '') + ' → khoá. ') +
+      'Dấu hiệu kích hoạt: ' + (ACCESS.reasons.length ? ACCESS.reasons.join('; ') : 'không rõ') + '.' + (ACCESS.bypass ? ' Đang ở chế độ kiểm thử (bỏ qua khoá).' : '');
+    body.appendChild(v);
+    body.appendChild(mk('p', 'tiny2', 'Quy tắc: ' + ACCESS.rule + ' Hàng đỏ là điều kiện đã khớp.'));
+    var groups = [['desktop', 'Điều kiện nhận diện trình duyệt máy tính'], ['webview', 'Điều kiện nhận diện webview']];
+    for (var g = 0; g < groups.length; g++) {
+      body.appendChild(mk('div', 'cgroup', groups[g][1]));
+      for (var i = 0; i < ACCESS.rows.length; i++) {
+        var r = ACCESS.rows[i]; if (r.group !== groups[g][0]) continue;
+        var row = mk('div', 'crow' + (r.hit ? ' hit' : ''));
+        row.appendChild(mk('span', 'st ' + (r.hit ? 'bad' : (r.strength === 'info' ? '' : 'ok')), r.hit ? '!' : (r.strength === 'info' ? 'i' : '✓')));
+        var mid = mk('div'), nm = mk('div', 'cn', r.label);
+        nm.appendChild(mk('span', 'badge ' + r.strength, r.strength === 'strong' ? 'Mạnh' : (r.strength === 'weak' ? 'Yếu' : 'Thông tin')));
+        mid.appendChild(nm); mid.appendChild(mk('div', 'cd', r.value)); row.appendChild(mid); body.appendChild(row);
+      }
+    }
+    body.appendChild(mk('p', 'tiny2', 'User-Agent: ' + UA));
+  }
+
+  /* --- Áp dụng kết quả: khoá / kiểm thử / bình thường --- */
+  var captureStarted = false;
+  function startCapture() {
+    captureActive = true;
+    if (!captureStarted) {
+      captureStarted = true;
+      if (motionSupported && !motionNeedsPrompt) startMotion();
+      queryPerms().then(afterPermChange);
+    }
+    renderAll();
+  }
+  function applyAccess() {
+    var locked = ACCESS.kind !== 'ok' && !ACCESS.bypass;
+    $('lockCard').hidden = !locked; $('card').hidden = locked; $('trust').hidden = locked;
+    $('conds').hidden = ACCESS.kind === 'ok';
+    $('testBar').hidden = !(ACCESS.kind !== 'ok' && ACCESS.bypass);
+    if (ACCESS.kind !== 'ok') { renderConds(); $('testBarText').textContent = 'Chế độ kiểm thử: đang bỏ qua khoá “' + (ACCESS.kind === 'desktop' ? 'máy tính' : 'webview') + '”.'; }
+    captureActive = !locked;
+    if (locked) { renderLock(); try { window.scrollTo(0, 0); } catch (e) {} }
+    else startCapture();
+  }
+  function enterTest() { ACCESS.bypass = true; persistBypass(true); applyAccess(); renderTrust(); }
+  function exitTest() { if (busy) return; ACCESS.bypass = false; persistBypass(false); applyAccess(); }
+
   /* ---------- Phần mở rộng: điểm tin cậy ---------- */
   var playerUrl = null;
   function vidExt(mime) { return /mp4/i.test(mime || '') ? '.mp4' : '.webm'; }
@@ -975,6 +1310,7 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
     tx.appendChild(mk('div', 'sc-s', 'Góc ' + a.slotName + ' · ngưỡng chấp nhận: trên ' + CFG.ACCEPT_ABOVE));
     box.appendChild(num); box.appendChild(tx); body.appendChild(box);
 
+    if (ev.access && ev.access.bypass) body.appendChild(mk('div', 'infonote', 'Chế độ kiểm thử: lần chụp này bỏ qua khoá truy cập (' + (ev.access.kind === 'desktop' ? 'máy tính' : 'webview') + ').'));
     if (ev.cap !== null && ev.cap !== undefined) body.appendChild(mk('div', 'capnote', 'Điểm bị giới hạn tối đa ' + ev.cap + ' (điểm gốc ' + ev.rawScore + ') do có tiêu chí không đạt nghiêm trọng.'));
 
     var ul = mk('ul', 'checks');
@@ -1094,9 +1430,10 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
 
     expiresAt = getExpiry(); tickExpire(); setInterval(tickExpire, 1000);
 
-    if (motionSupported && !motionNeedsPrompt) startMotion();
-    queryPerms().then(afterPermChange);
-    D.addEventListener('visibilitychange', function () { if (D.visibilityState === 'visible' && !busy) queryPerms().then(afterPermChange); });
+    $('btnReload').addEventListener('click', reloadPage);
+    $('btnTest').addEventListener('click', enterTest);
+    $('btnExitTest').addEventListener('click', exitTest);
+    D.addEventListener('visibilitychange', function () { if (D.visibilityState === 'visible' && !busy && captureActive) queryPerms().then(afterPermChange); });
 
     idbOpen(function (ok) {
       if (!ok) { store.kind = 'bộ nhớ tạm'; renderTrust(); return; }
@@ -1106,7 +1443,10 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
       });
     });
 
-    renderAll(); renderTrust();
+    ACCESS.bypass = readBypass();
+    detectAccess();
+    applyAccess();
+    renderTrust();
   }
   init();
 })();

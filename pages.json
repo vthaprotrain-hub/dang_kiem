@@ -21,7 +21,7 @@
       "description": "POC chụp ảnh xe (webview)",
       "order": 2
     },
-    { "id": "soon-1", "title": "Coming soon", "url": "", "icon": "✨", "color": "#8b5cf6", "status": "coming_soon", "description": "", "order": 3 },
+    { "id": "poc_chụp_anh_xe_webview_v2", "title": "Chụp ảnh xe V2", "poc_chụp_anh_xe_webview_v2_.html": "", "icon": "📷", "color": "#8b5cf6", "status": "active", "description": "POC chụp ảnh xe V2 (webview)", "order": 3 },
     { "id": "soon-2", "title": "Coming soon", "url": "", "icon": "✨", "color": "#ec4899", "status": "coming_soon", "description": "", "order": 4 },
     { "id": "soon-3", "title": "Coming soon", "url": "", "icon": "✨", "color": "#f59e0b", "status": "coming_soon", "description": "", "order": 5 },
     { "id": "soon-4", "title": "Coming soon", "url": "", "icon": "✨", "color": "#14b8a6", "status": "coming_soon", "description": "", "order": 6 },

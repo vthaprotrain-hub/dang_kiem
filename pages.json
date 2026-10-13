@@ -22,7 +22,7 @@
       "order": 2
     },
     { "id": "poc_chụp_anh_xe_webview_v2", "title": "Chụp ảnh xe V2", "poc_chụp_anh_xe_webview_v2_.html": "", "icon": "📷", "color": "#8b5cf6", "status": "active", "description": "POC chụp ảnh xe V2 (webview)", "order": 3 },
-    { "id": "soon-2", "title": "Coming soon", "url": "", "icon": "✨", "color": "#ec4899", "status": "coming_soon", "description": "", "order": 4 },
+    { "id": "ocar-aftersales-lite_v1", "title": "After Sales", "url": "ocar-aftersales-lite_v1.html", "icon": "✨", "color": "#ec4899", "status": "active", "description": "Hẫu mãi sau bán hàng", "order": 4 },
     { "id": "soon-3", "title": "Coming soon", "url": "", "icon": "✨", "color": "#f59e0b", "status": "coming_soon", "description": "", "order": 5 },
     { "id": "soon-4", "title": "Coming soon", "url": "", "icon": "✨", "color": "#14b8a6", "status": "coming_soon", "description": "", "order": 6 },
     { "id": "soon-5", "title": "Coming soon", "url": "", "icon": "✨", "color": "#ef4444", "status": "coming_soon", "description": "", "order": 7 },

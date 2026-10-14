@@ -162,6 +162,19 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
 .hbtn button{flex:1;min-height:36px;border-radius:8px;border:1.5px solid var(--teal);background:#fff;color:var(--teal);font:inherit;font-size:12px;font-weight:600;cursor:pointer}
 #player{display:block;width:100%;max-height:50vh;margin:10px 0 0;border-radius:10px;background:#0d1b1f}
 .tiny{margin:10px 0 0;font-size:11px;color:var(--muted)}
+
+.perm.soft{background:#f3fafa;border-color:#cfe6e5}
+.perm li.opt{color:#8a5200;border-color:#f0d7b0}
+.permact .btn-out{margin-top:8px}
+.permact .btn-out:first-child{margin-top:0}
+.lock-h{margin:16px 0 8px;font-size:15px;color:var(--teal);text-align:left}
+.lock-app{margin-top:18px;padding:14px;border-radius:12px;background:#f3fafa;text-align:left}
+.lock-apptext{margin:0;font-size:13px;line-height:1.55}
+.stores{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.store{display:flex;flex-direction:column;justify-content:center;flex:1 1 150px;min-height:52px;padding:6px 16px;border-radius:10px;background:#0f1b20;color:#fff;text-decoration:none;line-height:1.25}
+.store small{font-size:10px;opacity:.85}
+.store b{font-size:17px}
+.store:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -208,11 +221,17 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
     <div class="lock-ico" aria-hidden="true">🔒</div>
     <h2 id="lockTitle">Vui lòng mở bằng điện thoại</h2>
     <p class="lock-text" id="lockText"></p>
+    <h3 class="lock-h" id="way1" hidden>Cách 1: Mở bằng trình duyệt</h3>
     <div class="lock-actions" id="lockActions"></div>
     <div class="lock-more" id="lockMore" hidden></div>
     <p class="msg" id="lockMsg" role="status" aria-live="polite" hidden></p>
     <div class="urlbox" id="urlBox" hidden></div>
     <ol class="lock-steps" id="lockSteps"></ol>
+    <div class="lock-app" id="lockApp" hidden>
+      <h3 class="lock-h" style="margin-top:0">Cách 2: Chụp ảnh trong ứng dụng OPES</h3>
+      <p class="lock-apptext" id="appText"></p>
+      <div class="stores" id="stores"></div>
+    </div>
     <div class="lock-test">
       <button type="button" class="btn-out" id="btnTest">Cho phép truy cập để kiểm thử chụp ảnh</button>
       <p class="tiny2">Chỉ dùng để kiểm thử. Ảnh chụp trong môi trường này có thể bị chấm điểm thấp hoặc bị từ chối.</p>
@@ -230,7 +249,8 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
         <p id="permText"></p>
         <ul id="permList"></ul>
         <div class="permact" id="permAct" hidden>
-          <button type="button" class="btn-out" id="btnReload">Tải lại trang để xin lại quyền</button>
+          <button type="button" class="btn-out" id="btnAsk" hidden>Xin quyền lại</button>
+          <button type="button" class="btn-out" id="btnReload" hidden>Tải lại trang để xin lại quyền</button>
           <p class="tiny2" id="reloadHint">Sau khi bật quyền trong Cài đặt trang web, bấm nút này để trang xin quyền lại từ đầu.</p>
         </div>
       </div>
@@ -445,6 +465,7 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
   var perm = { camera: 'unknown', geo: 'unknown', motion: motionSupported ? (motionNeedsPrompt ? 'prompt' : 'granted') : 'unsupported', asked: false, working: false, fails: 0, queried: false, apiDenied: { camera: false, geo: false }, secure: !!window.isSecureContext };
   var PERM_LABEL = { camera: 'Camera', geo: 'Vị trí', motion: 'Cảm biến chuyển động' };
 
+  function canCapture() { return perm.secure && perm.camera === 'granted'; }
   function permOk(k) { var v = perm[k]; return v === 'granted' || v === 'unsupported'; }
   function allGranted() { return perm.secure && perm.camera === 'granted' && permOk('geo') && permOk('motion'); }
   function missing() {
@@ -548,42 +569,56 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
       perm.working = false;
       if (allGranted()) perm.fails = 0; else perm.fails++;
       afterPermChange();
-      if (allGranted()) showMsg('ok', 'Đã cấp đủ quyền. Bạn có thể chụp ảnh.'); else showMsg('', '');
+      if (allGranted()) showMsg('ok', 'Đã cấp đủ quyền. Bạn có thể chụp ảnh.');
+      else if (canCapture()) showMsg('warn', 'Bạn vẫn có thể chụp ảnh. Quyền chưa cấp (' + missing().map(function (k) { return PERM_LABEL[k]; }).join(', ') + ') sẽ bị tính 0 điểm tin cậy.');
+      else showMsg('', '');
     });
   }
 
   function renderPerm() {
-    var box = $('perm'), ok = allGranted() || !captureActive;
+    var box = $('perm'), camOk = canCapture();
     var cap = $('capWrap'), pb = $('btnPerm');
     var fileInp = $('fileCap'); fileInp.disabled = busy || expired;
     if (!captureActive) { box.hidden = true; return; }
-    box.hidden = ok; cap.hidden = !ok; pb.hidden = ok;
+    var optMiss = !permOk('geo') || !permOk('motion');
+    box.hidden = camOk && !optMiss;
+    box.className = 'perm' + (camOk ? ' soft' : '');
+    cap.hidden = !camOk; pb.hidden = camOk;
     cap.className = 'cap' + ((busy || expired) ? ' off' : '');
-    if (ok) return;
+    if (box.hidden) { $('permAct').hidden = true; return; }
+
     var miss = missing(), names = [], i;
-    for (i = 0; i < miss.length; i++) names.push(PERM_LABEL[miss[i]]);
+    for (i = 0; i < miss.length; i++) if (miss[i] !== 'camera' || !camOk) names.push(PERM_LABEL[miss[i]]);
     var apiBlocked = perm.apiDenied.camera || perm.apiDenied.geo;
-    var blocked = !perm.working && perm.secure && (apiBlocked || perm.fails >= 2);
+    var blocked = !perm.working && perm.secure && (camOk ? (perm.asked && (apiBlocked || perm.fails >= 2)) : (apiBlocked || perm.fails >= 2));
     var howto = isIOS ? 'Trên iPhone: bấm biểu tượng “aA” cạnh thanh địa chỉ → Cài đặt trang web → chọn “Cho phép” cho Camera và Vị trí.'
                       : 'Bấm biểu tượng ổ khóa (hoặc ⓘ) cạnh thanh địa chỉ → Quyền → chọn “Cho phép” cho Camera và Vị trí.';
     if (miss.indexOf('motion') >= 0 && isIOS) howto += ' Với Cảm biến chuyển động: đóng hẳn tab Safari rồi mở lại liên kết để được hỏi lại.';
+    var reloadTail = ' Sau đó bấm “Tải lại trang để xin lại quyền”.';
     var txt;
     if (!perm.secure) txt = 'Trang cần chạy trên HTTPS để dùng camera và vị trí. Hãy mở lại bằng đường dẫn https://.';
     else if (perm.working) txt = 'Đang chờ bạn chọn “Cho phép” trên hộp thoại của trình duyệt…';
-    else if (blocked) txt = 'Trình duyệt đang chặn quyền: ' + (names.length ? names.join(', ') : 'Camera, Vị trí') + '. ' + howto + ' Sau đó bấm “Tải lại trang để xin lại quyền”.';
-    else if (!perm.asked) txt = 'Để chụp ảnh, hệ thống cần quyền Camera, Vị trí và Cảm biến chuyển động. Bấm “Cấp quyền” rồi chọn “Cho phép”.';
-    else txt = 'Chưa cấp đủ quyền: ' + names.join(', ') + '. Bấm “Xin quyền lại” và chọn “Cho phép”.' + (miss.indexOf('camera') >= 0 && perm.camera === 'unavailable' ? ' Không tìm thấy camera trên thiết bị.' : '');
+    else if (!camOk) {
+      if (blocked) txt = 'Cần quyền Camera để chụp ảnh và quay video xác minh. Trình duyệt đang chặn quyền: ' + names.join(', ') + '. ' + howto + reloadTail;
+      else if (!perm.asked) txt = 'Cần quyền Camera để chụp ảnh và quay video xác minh. Vị trí và Cảm biến chuyển động không bắt buộc, nhưng nếu không cấp sẽ bị tính 0 điểm tin cậy. Bấm “Cấp quyền” rồi chọn “Cho phép”.';
+      else txt = 'Chưa cấp quyền Camera nên chưa thể chụp. Bấm “Xin quyền lại” và chọn “Cho phép”.' + (perm.camera === 'unavailable' ? ' Không tìm thấy camera trên thiết bị.' : '');
+    } else {
+      txt = 'Chưa cấp quyền: ' + names.join(', ') + '. Bạn vẫn có thể chụp ảnh, nhưng các mục này sẽ bị tính 0 điểm tin cậy.' + (blocked ? ' Muốn cấp lại: ' + howto + reloadTail : '');
+    }
     $('permText').textContent = txt;
     var ul = $('permList'); ul.textContent = '';
     ['camera', 'geo', 'motion'].forEach(function (k) {
       var li = D.createElement('li'), good = k === 'camera' ? perm.camera === 'granted' : permOk(k);
-      li.className = good ? 'ok' : 'no';
-      li.textContent = (good ? '✓ ' : '✕ ') + PERM_LABEL[k];
+      li.className = good ? 'ok' : (k === 'camera' ? 'no' : 'opt');
+      li.textContent = (good ? '✓ ' : '✕ ') + PERM_LABEL[k] + (k === 'camera' ? ' (bắt buộc)' : ' (không bắt buộc)');
       ul.appendChild(li);
     });
     pb.textContent = perm.working ? 'Đang xin quyền…' : (perm.asked ? 'Xin quyền lại' : 'Cấp quyền');
     pb.disabled = perm.working || !perm.secure;
-    $('permAct').hidden = !blocked;
+    var askVisible = camOk && optMiss && !blocked && !perm.working && perm.secure;
+    var ask = $('btnAsk'); ask.hidden = !askVisible; ask.textContent = perm.asked ? 'Xin quyền lại' : 'Cấp quyền Vị trí và Cảm biến';
+    $('btnReload').hidden = !blocked; $('reloadHint').hidden = !blocked;
+    $('permAct').hidden = !(askVisible || blocked);
   }
 
   /* ---------- Đồng hồ máy chủ ---------- */
@@ -831,7 +866,7 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
       return { ok: true, vendor: ext ? gl.getParameter(ext.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR), renderer: ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER) };
     } catch (e) { return { ok: false }; }
   }
-  var CAP_TABLE = { cam_dev: 30, gpu: 40, device: 50, photo: 40, behav: 50, motion: 60, native: 40, time: 50, video: 50 };
+  var CAP_TABLE = { cam_dev: 30, gpu: 40, device: 50, photo: 40, behav: 50, native: 40, time: 50, video: 50 };
 
   function scoreAttempt(att) {
     var C = [], i, nt = att.native, img = att.image, vd = att.video;
@@ -902,7 +937,7 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
     /* Cảm biến */
     var m = att.sensors;
     if (!motionSupported) add('motion', 'Cảm biến chuyển động khi cầm máy', 15, 'bad', 'Không có API cảm biến chuyển động.');
-    else if (perm.motion === 'denied') add('motion', 'Cảm biến chuyển động khi cầm máy', 15, 'bad', 'Quyền cảm biến bị từ chối.');
+    else if (perm.motion !== 'granted') add('motion', 'Cảm biến chuyển động khi cầm máy', 15, 'bad', 'Chưa cấp quyền cảm biến chuyển động nên tính 0 điểm (không bắt buộc).');
     else if (m.n >= 10 && m.lastAgeMs <= 10000) {
       if (m.std >= 0.015) add('motion', 'Cảm biến chuyển động khi cầm máy', 15, 'ok', m.n + ' mẫu (~' + (m.hz || '?') + ' Hz), dao động ' + fmt1(m.std, 3) + ' m/s², đúng kiểu máy cầm trên tay.');
       else add('motion', 'Cảm biến chuyển động khi cầm máy', 15, 'warn', 'Có dữ liệu nhưng gần như không dao động (' + fmt1(m.std, 4) + ' m/s²): máy đặt yên hoặc dữ liệu không thật.');
@@ -910,7 +945,7 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
 
     /* Vị trí */
     var g = att.loc;
-    if (!g) add('geo', 'Vị trí GPS', 10, 'bad', 'Chưa lấy được vị trí.');
+    if (!g) add('geo', 'Vị trí GPS', 10, 'bad', permOk('geo') ? 'Chưa lấy được vị trí.' : 'Chưa cấp quyền vị trí nên tính 0 điểm (không bắt buộc).');
     else if (g.acc > 100) add('geo', 'Vị trí GPS', 10, 'warn', 'Có vị trí nhưng sai số lớn (±' + Math.round(g.acc) + ' m).');
     else if (g.ageMs > 120000) add('geo', 'Vị trí GPS', 10, 'warn', 'Vị trí đã cũ (' + fmtGap(g.ageMs) + ').');
     else add('geo', 'Vị trí GPS', 10, 'ok', 'Có vị trí, sai số ±' + Math.round(g.acc) + ' m.');
@@ -1198,9 +1233,19 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
     return 'Tìm mục “Mở bằng trình duyệt” (Open in browser) trong menu ⋯ hoặc ⋮ của ứng dụng' + (a ? ' ' + a : '') + '.';
   }
 
+  var OPES_PLAY = 'https://play.google.com/store/apps/details?id=vn.com.opes.appopes';
+  var OPES_IOS = 'https://apps.apple.com/vn/app/opes/id1440456586';
+  /* Tự nhận diện hệ điều hành để đưa ra cửa hàng phù hợp */
+  function storeChoices() {
+    if (isIOS) return { os: 'iPhone/iPad (iOS)', list: [['App Store', OPES_IOS]] };
+    if (isAndroid && !isHarmony) return { os: 'Android', list: [['Google Play', OPES_PLAY]] };
+    return { os: isHarmony ? 'HarmonyOS' : 'không xác định', list: [['Google Play', OPES_PLAY], ['App Store', OPES_IOS]] };
+  }
+
   function renderLock() {
     var k = ACCESS.kind, actions = $('lockActions'), steps = $('lockSteps'), more = $('lockMore');
     actions.textContent = ''; steps.textContent = ''; more.textContent = ''; more.hidden = true; lockMsg('', ''); $('urlBox').hidden = true;
+    $('way1').hidden = true; $('lockApp').hidden = true; $('stores').textContent = '';
     function li(t) { var e = D.createElement('li'); e.textContent = t; steps.appendChild(e); }
     if (k === 'desktop') {
       $('lockTitle').textContent = 'Vui lòng mở bằng điện thoại';
@@ -1208,11 +1253,12 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
       actions.appendChild(mkBtn('btn-solid', 'Sao chép liên kết để gửi sang điện thoại', copyLink));
       li('Bấm “Sao chép liên kết”, rồi gửi sang điện thoại (Zalo, tin nhắn, email…).');
       li('Trên điện thoại, mở liên kết bằng Safari (iPhone) hoặc Chrome (Android), không mở trong khung chat của ứng dụng.');
-      li('Khi được hỏi, chọn “Cho phép” Camera, Vị trí và Cảm biến chuyển động.');
+      li('Khi được hỏi, chọn “Cho phép” Camera (bắt buộc), Vị trí và Cảm biến chuyển động.');
       return;
     }
-    $('lockTitle').textContent = 'Vui lòng mở bằng trình duyệt';
-    $('lockText').textContent = 'Bạn đang mở liên kết trong ' + (ACCESS.app ? ACCESS.app + ' (webview)' : 'ứng dụng khác (webview)') + '. Webview thường chặn camera, vị trí và cảm biến nên không thể chụp ảnh xác thực.';
+    $('lockTitle').textContent = 'Vui lòng mở bằng trình duyệt hoặc ứng dụng OPES';
+    $('lockText').textContent = 'Bạn đang mở liên kết trong ' + (ACCESS.app ? ACCESS.app + ' (webview)' : 'ứng dụng khác (webview)') + '. Webview thường chặn camera nên không thể chụp ảnh xác thực. Hãy chọn một trong hai cách bên dưới.';
+    $('way1').hidden = false;
     var ext = extLinks();
     if (ext.main) actions.appendChild(mkBtn('btn-solid', ext.main.label, function () { tryOpen(ext.main.url, isIOS ? 'Safari' : 'trình duyệt'); }));
     actions.appendChild(mkBtn('btn-out', 'Sao chép liên kết', copyLink));
@@ -1230,7 +1276,18 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
       li('Nếu không mở được: ' + appStep());
     }
     li('Hoặc bấm “Sao chép liên kết”, mở Chrome/Safari, dán vào thanh địa chỉ rồi truy cập.');
-    li('Trong trình duyệt, bấm “Cấp quyền” và chọn “Cho phép” Camera, Vị trí, Cảm biến.');
+    li('Trong trình duyệt, bấm “Cấp quyền” và chọn “Cho phép” Camera (bắt buộc), Vị trí, Cảm biến.');
+
+    var sc = storeChoices();
+    $('lockApp').hidden = false;
+    $('appText').textContent = 'Nếu không mở được trình duyệt, bạn có thể chụp ảnh ngay trong ứng dụng OPES: cài đặt hoặc mở ứng dụng OPES, đăng nhập rồi vào hành trình của bạn để chụp ảnh xe. Hệ thống nhận diện thiết bị của bạn là ' + sc.os + (sc.list.length > 1 ? ', vui lòng chọn cửa hàng phù hợp.' : '.');
+    sc.list.forEach(function (it) {
+      var a = D.createElement('a'); a.className = 'store'; a.href = it[1]; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      var small = D.createElement('small'); small.textContent = 'Tải ứng dụng OPES trên';
+      var bold = D.createElement('b'); bold.textContent = it[0];
+      a.appendChild(small); a.appendChild(bold); a.setAttribute('aria-label', 'Tải ứng dụng OPES trên ' + it[0]);
+      $('stores').appendChild(a);
+    });
   }
 
   function renderConds() {
@@ -1403,13 +1460,14 @@ details.trust summary:focus-visible{outline:3px solid var(--ink);outline-offset:
     inp.addEventListener('change', function () {
       var f = inp.files && inp.files[0];
       if (!f) return;
-      if (busy || expired || !allGranted()) { try { inp.value = ''; } catch (e) {} return; }
+      if (busy || expired || !canCapture()) { try { inp.value = ''; } catch (e) {} return; }
       startVerify(f);
       try { inp.value = ''; } catch (e2) {}
     });
     inp.addEventListener('cancel', function () { showMsg('warn', 'Chưa nhận được ảnh nào. Hãy bấm “Chụp ảnh” và chụp lại.'); });
 
     $('btnPerm').addEventListener('click', requestAll);
+    $('btnAsk').addEventListener('click', requestAll);
     $('btnBack').addEventListener('click', function () {
       if (busy) return;
       if (cur > 0) { cur--; showMsg('', ''); renderAll(); }

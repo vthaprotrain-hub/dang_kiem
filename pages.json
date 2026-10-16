@@ -24,8 +24,8 @@
     { "id": "poc_chụp_anh_xe_webview_v2", "title": "Chụp ảnh xe V2", "url": "poc_chụp_anh_xe_webview_v2_.html", "icon": "📷", "color": "#8b5cf6", "status": "active", "description": "POC chụp ảnh xe V2 (webview)", "order": 3 },
     { "id": "ocar-aftersales-lite_v1", "title": "After Sales", "url": "ocar-aftersales-lite_v1.html", "icon": "✨", "color": "#ec4899", "status": "active", "description": "Hẫu mãi sau bán hàng", "order": 4 },
     { "id": "poc_app_chup_anh_xe", "title": "APP Chụp ảnh xe", "url": "poc_app_chup_anh_xe.html", "icon": "✨", "color": "#f59e0b", "status": "active", "description": "APP chụp ảnh xe", "order": 5 },
-    { "id": "soon-4", "title": "Coming soon", "url": "", "icon": "✨", "color": "#14b8a6", "status": "coming_soon", "description": "", "order": 6 },
-    { "id": "soon-5", "title": "Coming soon", "url": "", "icon": "✨", "color": "#ef4444", "status": "coming_soon", "description": "", "order": 7 },
+    { "id": "face-liveness-poc", "title": "Face live", "url": "face-liveness-poc/index.html", "icon": "✨", "color": "#14b8a6", "status": "active", "description": "Check khuôn mặt", "order": 6 },
+    { "id": "smart-vehicle-8-view", "title": "Check góc Ocar", "url": "smart-vehicle-8-view/index.html", "icon": "✨", "color": "#ef4444", "status": "active", "description": "check 8 góc xe", "order": 7 },
     { "id": "soon-6", "title": "Coming soon", "url": "", "icon": "✨", "color": "#6366f1", "status": "coming_soon", "description": "", "order": 8 },
     { "id": "soon-7", "title": "Coming soon", "url": "", "icon": "✨", "color": "#0ea5e9", "status": "coming_soon", "description": "", "order": 9 },
     { "id": "soon-8", "title": "Coming soon", "url": "", "icon": "✨", "color": "#64748b", "status": "coming_soon", "description": "", "order": 10 }

@@ -1,0 +1,215 @@
+/* ============================================================
+   Face capture POC — giao diện tối giản, ưu tiên điện thoại
+   ============================================================ */
+
+:root {
+  --bg: #0b1220;
+  --bg-elev: #131c2e;
+  --text: #eef2f8;
+  --text-dim: #9fb0c8;
+  --line: #243049;
+  --accent: #3b82f6;
+
+  --c-gray: #9aa3b2;
+  --c-red: #ef4444;
+  --c-yellow: #f5b301;
+  --c-green: #22c55e;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+#app { height: 100vh; height: 100dvh; position: relative; overflow: hidden; }
+
+.screen { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.screen--center { align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+
+/* ---------- Card & typography ---------- */
+.card {
+  width: 100%; max-width: 440px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 24px 22px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+}
+.card--narrow { text-align: center; max-width: 320px; }
+.card--preview { max-width: 520px; }
+h1 { font-size: 1.6rem; line-height: 1.25; margin: 8px 0 8px; }
+h2 { font-size: 1.25rem; margin: 0 0 8px; }
+.lead { color: var(--text-dim); margin: 0 0 12px; }
+.tips { margin: 0 0 16px; padding-left: 20px; color: var(--text); }
+.tips li { margin: 4px 0; }
+.fineprint { color: var(--text-dim); font-size: .82rem; margin: 14px 0 0; }
+.badge-poc {
+  display: inline-block; font-size: .75rem; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--c-yellow); border: 1px solid rgba(245, 179, 1, .45); border-radius: 999px; padding: 2px 10px;
+}
+.notice { border-radius: 12px; padding: 10px 12px; font-size: .9rem; margin: 0 0 14px; }
+.notice--warn { background: rgba(245, 179, 1, .12); border: 1px solid rgba(245, 179, 1, .4); color: #ffe19a; }
+
+.stack { display: grid; gap: 10px; margin-top: 14px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  appearance: none; border: 1px solid transparent; border-radius: 14px;
+  padding: 13px 18px; font: inherit; font-weight: 600; cursor: pointer;
+  color: var(--text); background: transparent; min-height: 48px;
+  transition: transform .08s ease, background-color .2s ease, border-color .2s ease;
+}
+.btn:active { transform: scale(.98); }
+.btn--primary { background: var(--accent); }
+.btn--primary:hover { background: #2f6fe0; }
+.btn--ghost { border-color: var(--line); background: rgba(255, 255, 255, .03); }
+.btn--ghost:hover { background: rgba(255, 255, 255, .07); }
+.btn--block { width: 100%; }
+.btn:focus-visible, .icon-btn:focus-visible, .link-btn:focus-visible, .capture-btn:focus-visible {
+  outline: 3px solid #93c5fd; outline-offset: 2px;
+}
+
+.link-btn {
+  appearance: none; background: none; border: 0; color: var(--text-dim); font: inherit; font-size: .88rem;
+  text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 10px 6px; min-height: 44px;
+}
+.link-btn[aria-pressed="true"] { color: #93c5fd; }
+.link-btn--accent { color: var(--c-yellow); }
+
+.icon-btn {
+  appearance: none; border: 0; width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(15, 23, 42, .6); color: var(--text); display: grid; place-items: center; cursor: pointer;
+  backdrop-filter: blur(6px); flex: none;
+}
+
+/* ---------- Spinner ---------- */
+.spinner {
+  width: 40px; height: 40px; margin: 6px auto 14px; border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, .15); border-top-color: var(--accent);
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Camera screen ---------- */
+.screen--camera { background: #000; }
+
+.topbar {
+  position: absolute; z-index: 5; top: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: calc(8px + var(--safe-top)) 10px 8px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, .55), transparent);
+}
+.chips { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; flex: 1; }
+.chip {
+  display: inline-flex; align-items: center; gap: 7px; max-width: 100%;
+  font-size: .78rem; font-weight: 600; padding: 3px 11px; border-radius: 999px;
+  background: rgba(15, 23, 42, .7); color: var(--text); backdrop-filter: blur(6px);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: background-color .25s ease;
+}
+.chip i { width: 9px; height: 9px; border-radius: 50%; background: var(--c-gray); flex: none; transition: background-color .25s ease; }
+.chip--gray i { background: var(--c-gray); }
+.chip--red i { background: var(--c-red); }
+.chip--yellow i { background: var(--c-yellow); }
+.chip--green i { background: var(--c-green); }
+
+.stage { position: relative; flex: 1; min-height: 0; background: #000; overflow: hidden; }
+.stage video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; background: #000;
+}
+/* Lật gương CHỈ bằng CSS trên <video>; canvas overlay không bị lật, toạ độ được ánh xạ trong JS. */
+.stage.is-mirrored video { transform: scaleX(-1); }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+.guidance {
+  position: absolute; left: 50%; bottom: 5%; transform: translateX(-50%);
+  width: min(92%, 460px); text-align: center;
+  padding: 12px 16px; border-radius: 16px;
+  background: rgba(10, 16, 28, .78); backdrop-filter: blur(8px);
+  border: 2px solid var(--c-gray);
+  transition: border-color .3s ease, background-color .3s ease;
+}
+.guidance__main { display: block; font-size: 1.08rem; font-weight: 650; line-height: 1.35; }
+.guidance__sub { display: block; font-size: .85rem; color: var(--text-dim); margin-top: 2px; }
+.guidance--gray { border-color: var(--c-gray); }
+.guidance--red { border-color: var(--c-red); }
+.guidance--yellow { border-color: var(--c-yellow); }
+.guidance--green { border-color: var(--c-green); background: rgba(8, 40, 22, .82); }
+
+.challenge-timer {
+  position: absolute; right: 12px; top: calc(64px + var(--safe-top));
+  background: rgba(15, 23, 42, .75); border-radius: 999px; padding: 3px 11px;
+  font-size: .8rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--c-yellow);
+}
+
+.perf-notice {
+  position: absolute; left: 50%; transform: translateX(-50%); top: calc(76px + var(--safe-top));
+  background: rgba(245, 179, 1, .18); border: 1px solid rgba(245, 179, 1, .5); color: #ffe19a;
+  border-radius: 999px; padding: 3px 12px; font-size: .75rem; white-space: nowrap;
+}
+
+.debug-panel {
+  position: absolute; left: 8px; top: calc(64px + var(--safe-top)); margin: 0;
+  max-width: calc(100% - 16px); max-height: 56%; overflow: hidden;
+  background: rgba(2, 6, 14, .78); color: #c7f9d4; border-radius: 10px; padding: 8px 10px;
+  font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap;
+  pointer-events: none;
+}
+
+/* Dải điều khiển nằm dưới vùng camera (không đè lên video) */
+.screen--camera .controls {
+  position: relative; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  padding: 10px 14px calc(12px + var(--safe-bottom)); background: #05080f;
+}
+.screen--camera .controls .link-btn:first-child { justify-self: start; }
+.screen--camera .controls .link-btn:last-child { justify-self: end; }
+
+.capture-wrap { display: grid; place-items: center; }
+.capture-btn {
+  appearance: none; width: 78px; height: 78px; border-radius: 50%; padding: 0; cursor: pointer;
+  border: 4px solid rgba(255, 255, 255, .35); background: transparent; display: grid; place-items: center;
+  transition: border-color .25s ease, box-shadow .25s ease, transform .1s ease;
+}
+.capture-btn span {
+  width: 58px; height: 58px; border-radius: 50%; background: rgba(255, 255, 255, .25);
+  transition: background-color .25s ease;
+}
+.capture-btn:disabled { cursor: not-allowed; }
+.capture-btn:not(:disabled) { border-color: var(--c-green); box-shadow: 0 0 0 5px rgba(34, 197, 94, .25); }
+.capture-btn:not(:disabled) span { background: #fff; }
+.capture-btn:not(:disabled):active { transform: scale(.94); }
+
+/* ---------- Preview ---------- */
+.preview-frame {
+  border-radius: 14px; overflow: hidden; background: #000; border: 1px solid var(--line);
+  display: grid; place-items: center; max-height: 58vh;
+}
+.preview-frame img { display: block; max-width: 100%; max-height: 58vh; object-fit: contain; }
+
+/* ---------- Details / pre ---------- */
+.details { margin: 10px 0 0; color: var(--text-dim); font-size: .85rem; }
+.details pre { white-space: pre-wrap; word-break: break-word; max-height: 200px; overflow: auto; margin: 8px 0 0; }
+
+/* ---------- Màn hình ngang (webcam / điện thoại xoay ngang) ---------- */
+@media (min-width: 900px) {
+  .guidance { bottom: 6%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation-duration: 2s !important; }
+}

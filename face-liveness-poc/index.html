@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="referrer" content="no-referrer">
+  <title>Chụp ảnh khuôn mặt – POC kiểm tra tại chỗ</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- Màn hình giới thiệu -->
+    <section id="screen-intro" class="screen screen--center">
+      <div class="card">
+        <div class="badge-poc">POC nghiên cứu</div>
+        <h1>Chụp ảnh khuôn mặt</h1>
+        <p class="lead">Đưa khuôn mặt vào khung oval, nhìn thẳng vào camera và làm theo hướng dẫn. Nút chụp chỉ bật khi mọi điều kiện đã đạt.</p>
+        <ul class="tips">
+          <li>Chọn nơi đủ sáng, không bị ngược sáng.</li>
+          <li>Bỏ khẩu trang, kính râm hoặc mũ che mặt.</li>
+          <li>Chỉ một người trong khung hình.</li>
+        </ul>
+        <div id="env-warning" class="notice notice--warn" role="alert" hidden></div>
+        <button id="btn-start" class="btn btn--primary btn--block" type="button">Bắt đầu</button>
+        <p class="fineprint">
+          Mọi xử lý diễn ra ngay trên thiết bị của bạn; video, landmark và ảnh không được gửi đi đâu.
+          Thử thách chớp mắt/quay đầu chỉ là kiểm tra hành vi cơ bản, <strong>không bảo đảm</strong> xác minh danh tính hay chống giả mạo.
+        </p>
+      </div>
+    </section>
+
+    <!-- Đang tải model / mở camera -->
+    <section id="screen-loading" class="screen screen--center" hidden>
+      <div class="card card--narrow">
+        <div class="spinner" aria-hidden="true"></div>
+        <p id="loading-text" role="status" aria-live="polite">Đang khởi động…</p>
+      </div>
+    </section>
+
+    <!-- Lỗi -->
+    <section id="screen-error" class="screen screen--center" hidden>
+      <div class="card">
+        <h2 id="error-title">Đã xảy ra lỗi</h2>
+        <p id="error-message"></p>
+        <details id="error-details" class="details" hidden>
+          <summary>Chi tiết kỹ thuật</summary>
+          <pre id="error-details-text"></pre>
+        </details>
+        <div class="stack">
+          <button id="btn-error-retry" class="btn btn--primary btn--block" type="button">Thử lại</button>
+          <button id="btn-error-manual" class="btn btn--ghost btn--block" type="button" hidden>Chụp thủ công (không kiểm tra tự động)</button>
+          <button id="btn-error-back" class="btn btn--ghost btn--block" type="button">Quay lại</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Camera -->
+    <section id="screen-camera" class="screen screen--camera" hidden>
+      <header class="topbar">
+        <button id="btn-close" class="icon-btn" type="button" aria-label="Đóng và tắt camera">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+        </button>
+        <div class="chips">
+          <span id="chip-geo" class="chip chip--gray"><i></i><span>Hình học: chưa có mặt</span></span>
+          <span id="chip-live" class="chip chip--gray"><i></i><span>Liveness: chưa bắt đầu</span></span>
+        </div>
+        <button id="btn-switch" class="icon-btn" type="button" aria-label="Chuyển camera trước/sau" hidden>
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 8h12l-3-3M20 16H8l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </button>
+      </header>
+
+      <div id="stage" class="stage">
+        <video id="video" playsinline muted autoplay></video>
+        <canvas id="overlay"></canvas>
+        <div id="guidance" class="guidance guidance--gray" role="status" aria-live="polite">
+          <span id="guidance-main" class="guidance__main">Đang tìm khuôn mặt…</span>
+          <span id="guidance-sub" class="guidance__sub" hidden></span>
+        </div>
+        <div id="perf-notice" class="perf-notice" hidden>Thiết bị xử lý chậm — đã giảm tần suất kiểm tra.</div>
+        <div id="challenge-timer" class="challenge-timer" hidden aria-hidden="true"></div>
+        <pre id="debug-panel" class="debug-panel" hidden aria-hidden="true"></pre>
+      </div>
+
+      <footer class="controls">
+        <button id="btn-debug" class="link-btn" type="button" aria-pressed="false">Chế độ kỹ thuật</button>
+        <div class="capture-wrap">
+          <button id="btn-capture" class="capture-btn" type="button" aria-label="Chụp ảnh" aria-disabled="true" disabled>
+            <span></span>
+          </button>
+        </div>
+        <button id="btn-retry-liveness" class="link-btn link-btn--accent" type="button" hidden>Thử lại thử thách</button>
+      </footer>
+    </section>
+
+    <!-- Xem trước -->
+    <section id="screen-preview" class="screen screen--center" hidden>
+      <div class="card card--preview">
+        <h2>Xem trước ảnh</h2>
+        <div class="preview-frame"><img id="preview-img" alt="Ảnh khuôn mặt vừa chụp"></div>
+        <p id="preview-note" class="fineprint"></p>
+        <div class="row">
+          <button id="btn-retake" class="btn btn--ghost" type="button">Chụp lại</button>
+          <button id="btn-confirm" class="btn btn--primary" type="button">Sử dụng ảnh này</button>
+        </div>
+        <button id="btn-download" class="link-btn" type="button">Tải ảnh xuống (tuỳ chọn, chỉ để kiểm tra POC)</button>
+      </div>
+    </section>
+
+    <!-- Đã xác nhận -->
+    <section id="screen-done" class="screen screen--center" hidden>
+      <div class="card">
+        <h2>Đã xác nhận ảnh</h2>
+        <p>Ảnh chỉ đang nằm trong bộ nhớ của trình duyệt này và <strong>chưa được gửi đi đâu</strong>. Camera đã được tắt.</p>
+        <div class="stack">
+          <button id="btn-done-download" class="btn btn--ghost btn--block" type="button">Tải ảnh xuống</button>
+          <button id="btn-again" class="btn btn--primary btn--block" type="button">Chụp ảnh mới</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

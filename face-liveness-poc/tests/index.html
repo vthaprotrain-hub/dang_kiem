@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kiểm thử đơn vị — Face capture POC</title>
+  <style>
+    body { font: 15px/1.5 system-ui, sans-serif; margin: 24px auto; max-width: 860px; padding: 0 16px; background: #0b1220; color: #eef2f8; }
+    h1 { font-size: 1.3rem; }
+    .sum { padding: 10px 14px; border-radius: 10px; margin: 12px 0; font-weight: 600; }
+    .sum.ok { background: #14532d; } .sum.bad { background: #7f1d1d; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 4px 0; border-bottom: 1px solid #243049; }
+    li.ok::before { content: "✓ "; color: #22c55e; }
+    li.bad::before { content: "✗ "; color: #ef4444; }
+    .err { color: #fca5a5; display: block; margin-left: 20px; font-family: ui-monospace, monospace; font-size: 13px; }
+    p.note { color: #9fb0c8; font-size: .85rem; }
+  </style>
+</head>
+<body>
+  <h1>Kiểm thử đơn vị (hàm thuần)</h1>
+  <p class="note">Dữ liệu tổng hợp chỉ kiểm tra LOGIC. Không thay thế kiểm thử camera + model thật (xem README).</p>
+  <div id="summary" class="sum">Đang chạy…</div>
+  <ul id="list"></ul>
+  <script type="module">
+    import { runAll } from './tests.js';
+    const results = runAll();
+    const pass = results.filter((r) => r.ok).length;
+    const sum = document.getElementById('summary');
+    sum.textContent = `${pass}/${results.length} test đạt`;
+    sum.className = 'sum ' + (pass === results.length ? 'ok' : 'bad');
+    const list = document.getElementById('list');
+    for (const r of results) {
+      const li = document.createElement('li');
+      li.className = r.ok ? 'ok' : 'bad';
+      li.textContent = r.name;
+      if (!r.ok) {
+        const e = document.createElement('span');
+        e.className = 'err';
+        e.textContent = r.error;
+        li.appendChild(e);
+      }
+      list.appendChild(li);
+    }
+  </script>
+</body>
+</html>

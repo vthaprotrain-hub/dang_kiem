@@ -1,0 +1,76 @@
+/* layout.css — khung ứng dụng, thành phần dùng chung (nút, thẻ, input, switch, banner) */
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45}
+#app{position:fixed;inset:0;overflow:hidden}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg)}
+.screen.is-active{display:flex}
+.scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:12px 14px calc(24px + var(--safe-b));scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+
+.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic.big{width:44px;height:44px}
+
+/* ---------- thanh tiêu đề ---------- */
+.topbar{display:flex;align-items:center;gap:12px;padding:calc(12px + var(--safe-t)) 14px 10px;background:linear-gradient(180deg,var(--bg-2),var(--bg));border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.brand h1{font-size:17px;line-height:1.2;font-weight:700;letter-spacing:.1px}
+.brand p{font-size:12.5px;color:var(--ink-2);margin-top:2px}
+.brand-mark{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:20px;color:#04201f;background:linear-gradient(135deg,var(--teal),#7be8e4);flex:none;box-shadow:0 4px 14px rgba(25,195,191,.35)}
+.brand-compact h1{font-size:16px}
+.badge-poc{font-size:11px;font-weight:800;letter-spacing:1px;color:var(--orange);border:1.5px solid var(--orange);border-radius:999px;padding:3px 9px}
+
+/* ---------- thẻ ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;margin-bottom:12px}
+.card h2{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;margin-bottom:12px}
+.step-no{width:24px;height:24px;border-radius:50%;display:inline-grid;place-items:center;font-size:12.5px;font-weight:800;background:var(--teal-soft);color:var(--teal)}
+.hint{font-size:12.5px;color:var(--muted);margin-top:6px}
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.label{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+.label small{font-weight:500;color:var(--muted)}
+
+.input{width:100%;min-height:46px;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line-2);background:var(--bg-2);color:var(--ink);font-size:16px;outline:none;transition:border-color .15s,box-shadow .15s;appearance:none;-webkit-appearance:none}
+select.input{background-image:linear-gradient(45deg,transparent 50%,var(--ink-2) 50%),linear-gradient(135deg,var(--ink-2) 50%,transparent 50%);background-position:calc(100% - 20px) 52%,calc(100% - 14px) 52%;background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:36px}
+.input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(25,195,191,.18)}
+input[type=range]{width:100%;accent-color:var(--teal)}
+output{color:var(--teal);font-weight:700}
+
+/* ---------- nút ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 18px;border-radius:14px;font-weight:700;font-size:15px;color:var(--ink);background:var(--card-2);border:1.5px solid var(--line-2);transition:transform .12s,background .2s,opacity .2s}
+.btn:active{transform:scale(.97)}
+.btn.sm{min-height:40px;padding:0 14px;font-size:13.5px;border-radius:12px}
+.btn.lg{min-height:54px;font-size:16.5px;border-radius:16px}
+.btn.primary{background:var(--orange);border-color:var(--orange);color:#1a1000;box-shadow:0 8px 20px rgba(248,150,33,.28)}
+.btn.primary[aria-disabled=true],.btn.primary:disabled{background:#4a3a24;border-color:#4a3a24;color:#a8987f;box-shadow:none}
+.btn.ghost{background:transparent;border-color:var(--line-2);color:var(--ink-2)}
+.btn.danger{background:rgba(255,90,95,.12);border-color:rgba(255,90,95,.5);color:#ff8d90}
+.btn.ok{background:rgba(53,208,127,.16);border-color:rgba(53,208,127,.6);color:var(--ok)}
+.btn.teal{background:var(--teal-soft);border-color:rgba(25,195,191,.6);color:var(--teal)}
+.btn[hidden]{display:none}
+@media (hover:hover){.btn:hover{background:#23384a}.btn.primary:not([aria-disabled=true]):hover{background:var(--orange-600)}}
+
+.icon-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;background:var(--glass);border:1px solid var(--glass-line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.icon-btn.lg{width:50px;height:50px}
+.icon-btn:active{transform:scale(.94)}
+.topbar .icon-btn{background:var(--card-2)}
+
+/* ---------- switch / segmented ---------- */
+.switch{display:flex;align-items:center;gap:12px;min-height:44px;cursor:pointer}
+.switch input{position:absolute;opacity:0;pointer-events:none}
+.switch .track{width:46px;height:28px;border-radius:999px;background:#2a3b45;position:relative;transition:background .2s;flex:none}
+.switch .track::after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#dfe8ec;transition:transform .2s}
+.switch input:checked + .track{background:var(--teal)}
+.switch input:checked + .track::after{transform:translateX(18px);background:#fff}
+.switch input:focus-visible + .track{outline:3px solid rgba(25,195,191,.6);outline-offset:2px}
+.sw-text{font-size:14px;color:var(--ink)}
+
+.seg{display:flex;background:var(--bg-2);border:1.5px solid var(--line-2);border-radius:14px;padding:3px;gap:3px}
+.seg-btn{flex:1;min-height:40px;border-radius:11px;font-weight:600;font-size:14px;color:var(--ink-2)}
+.seg-btn.is-on{background:var(--teal);color:#032221}
+
+/* ---------- banner / cảnh báo ---------- */
+.banner{border-radius:14px;padding:12px 14px;font-size:14px;font-weight:600;margin-bottom:12px;border:1px solid var(--line-2);background:var(--card-2)}
+.banner[data-level=ok]{background:rgba(53,208,127,.13);border-color:rgba(53,208,127,.5);color:#a9f0c8}
+.banner[data-level=warn]{background:rgba(255,201,60,.12);border-color:rgba(255,201,60,.5);color:#ffe29a}
+.banner[data-level=bad]{background:rgba(255,90,95,.12);border-color:rgba(255,90,95,.5);color:#ffb0b3}
+.warn-box{margin-top:12px;font-size:13px;padding:10px 12px;border-radius:12px;background:rgba(255,201,60,.1);border:1px solid rgba(255,201,60,.4);color:#ffe29a}
+.foot-note{text-align:center;color:var(--muted);font-size:12px;padding:6px 0 0}

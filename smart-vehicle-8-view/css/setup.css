@@ -1,0 +1,61 @@
+/* setup.css — Màn hình 1: cấu hình xe & hướng dẫn */
+.resume-card{display:flex;align-items:center;gap:12px;border-color:rgba(248,150,33,.5);background:rgba(248,150,33,.08)}
+.resume-text{flex:1;min-width:0}
+.resume-text b{display:block;font-size:14.5px}
+.resume-text small{color:var(--ink-2);font-size:12.5px}
+.resume-actions{display:flex;gap:8px}
+
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.type-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 4px 6px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg-2);color:var(--ink-2);min-height:84px;transition:border-color .15s,background .15s}
+.type-btn .icon-svg,.type-btn .icon-wrap{width:100%;height:46px}
+.type-btn .icon-svg{height:46px}
+.type-btn span.t-name{font-size:11.5px;font-weight:600;line-height:1.15;text-align:center}
+.type-btn[aria-checked=true]{border-color:var(--teal);background:var(--teal-soft);color:#fff}
+.type-btn:active{transform:scale(.97)}
+.icon-svg{display:block;width:100%;height:auto;overflow:visible}
+.icon-svg .g-body{fill:none;stroke:currentColor;stroke-width:1.3;stroke-linejoin:round;stroke-linecap:round}
+.icon-svg .g-wheel{fill:none;stroke:currentColor;stroke-width:1.1;opacity:.85}
+.icon-svg .g-glass{fill:rgba(25,195,191,.16);stroke:var(--teal);stroke-width:1}
+.icon-svg .g-light{fill:none;stroke:#ffd77a;stroke-width:1.1}
+.icon-svg .g-tail{fill:none;stroke:#ff8a8a;stroke-width:1.1}
+
+.plate-input{font-family:var(--mono);letter-spacing:1px;font-weight:700;text-transform:uppercase}
+
+/* sơ đồ vòng 8 góc */
+.guide-grid{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center;margin-bottom:12px}
+.ring-guide svg{width:100%;height:auto}
+.ring-legend{display:grid;gap:4px;font-size:12.5px;color:var(--ink-2)}
+.ring-legend li{display:flex;align-items:center;gap:8px}
+.ring-legend .n{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;background:var(--teal-soft);color:var(--teal);flex:none}
+.ring-legend .o{margin-left:auto;font-size:10.5px;color:var(--muted)}
+.quote{border-left:3px solid var(--teal);padding:4px 0 4px 12px;color:var(--ink);font-size:14px;margin:6px 0 12px}
+.tips{display:grid;gap:8px}
+.tips li{display:flex;gap:10px;font-size:13px;color:var(--ink-2);align-items:flex-start}
+.tips .ic{margin-top:2px;color:var(--teal)}
+
+/* kiểm tra thiết bị */
+.perm-note{font-size:13px;color:var(--ink-2);margin-bottom:12px}
+.checks{display:grid;gap:10px}
+.checks li{display:grid;grid-template-columns:14px 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--bg-2);border:1px solid var(--line)}
+.checks .dot{width:12px;height:12px;border-radius:50%;background:var(--idle)}
+.checks li[data-state=busy] .dot{background:var(--warn);animation:blink 1s infinite}
+.checks li[data-state=ok] .dot{background:var(--ok)}
+.checks li[data-state=bad] .dot{background:var(--bad)}
+.checks li[data-state=warn] .dot{background:var(--warn)}
+.chk-text b{display:block;font-size:14px}
+.chk-text small{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:1px}
+.checks li[data-state=bad] small{color:#ffb0b3}
+.checks li[data-state=ok] small{color:#a9f0c8}
+.checks .btn{max-width:150px;min-height:44px;font-size:12.5px;padding:0 10px;text-align:center;line-height:1.2}
+@keyframes blink{50%{opacity:.35}}
+
+.options summary{display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:15px;cursor:pointer;min-height:28px}
+.options summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--ink-2);border-bottom:2px solid var(--ink-2);transform:rotate(45deg);transition:transform .2s;margin-right:4px}
+.options[open] summary::after{transform:rotate(-135deg)}
+.opt-body{margin-top:14px}
+.test-panel{border:1px dashed var(--line-2);border-radius:14px;padding:12px;margin:8px 0 14px;background:rgba(248,150,33,.05)}
+.test-panel h3{font-size:13px;color:var(--orange);margin-bottom:10px}
+
+.dock{padding:10px 14px calc(10px + var(--safe-b));background:linear-gradient(0deg,var(--bg) 70%,rgba(11,19,23,0));border-top:1px solid var(--line)}
+.dock .btn{width:100%}
+.dock-hint{font-size:12px;color:var(--muted);text-align:center;margin-top:6px;min-height:16px}

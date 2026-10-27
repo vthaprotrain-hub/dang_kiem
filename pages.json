@@ -26,7 +26,7 @@
     { "id": "poc_app_chup_anh_xe", "title": "APP Chụp ảnh xe", "url": "poc_app_chup_anh_xe.html", "icon": "✨", "color": "#f59e0b", "status": "active", "description": "APP chụp ảnh xe", "order": 5 },
     { "id": "face-liveness-poc", "title": "Face live", "url": "face-liveness-poc/index.html", "icon": "✨", "color": "#14b8a6", "status": "active", "description": "Check khuôn mặt", "order": 6 },
     { "id": "smart-vehicle-8-view", "title": "Check góc Ocar", "url": "smart-vehicle-8-view/index.html", "icon": "✨", "color": "#ef4444", "status": "active", "description": "check 8 góc xe", "order": 7 },
-    { "id": "soon-6", "title": "Coming soon", "url": "", "icon": "✨", "color": "#6366f1", "status": "coming_soon", "description": "", "order": 8 },
+    { "id": "kpi-system", "title": "KPI SYSTEM", "url": "opes-kpi-system/index.html", "icon": "✨", "color": "#6366f1", "status": "active", "description": "Hệ thống quản lý KPI", "order": 8 },
     { "id": "soon-7", "title": "Coming soon", "url": "", "icon": "✨", "color": "#0ea5e9", "status": "coming_soon", "description": "", "order": 9 },
     { "id": "soon-8", "title": "Coming soon", "url": "", "icon": "✨", "color": "#64748b", "status": "coming_soon", "description": "", "order": 10 }
   ]

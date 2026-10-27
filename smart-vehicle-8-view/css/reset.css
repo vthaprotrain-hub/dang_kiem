@@ -1,0 +1,16 @@
+/* reset.css — chuẩn hóa tối thiểu cho mobile-first */
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,p,ul,ol,figure,blockquote{margin:0;padding:0}
+ul,ol{list-style:none}
+button,input,select,textarea{font:inherit;color:inherit;margin:0}
+button{background:none;border:0;padding:0;cursor:pointer;touch-action:manipulation}
+button:disabled{cursor:not-allowed}
+img,svg,video,canvas{display:block;max-width:100%}
+a{color:inherit}
+[hidden]{display:none !important}
+summary{list-style:none}
+summary::-webkit-details-marker{display:none}
+:focus-visible{outline:3px solid rgba(25,195,191,.7);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}}

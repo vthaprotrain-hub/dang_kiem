@@ -1,0 +1,22 @@
+{
+  "name": "opes-kpi-kbi-poc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "POC Hệ thống Quản lý KPI & KBI – OPES. Ứng dụng web tĩnh (HTML/CSS/ES6) + Firebase. package.json chỉ phục vụ công cụ phát triển/kiểm thử – ứng dụng KHÔNG cần Node.js khi chạy.",
+  "type": "module",
+  "scripts": {
+    "serve": "npx --yes http-server . -p 8080 -c-1",
+    "emulators": "firebase emulators:start --project demo-opes-kpi --only auth,database,hosting",
+    "test": "node --test tests/scoring.test.mjs tests/carryover.test.mjs",
+    "test:rules": "firebase emulators:exec --project demo-opes-kpi --only database \"node tests/rules/run-emulator.mjs\"",
+    "build:rules": "node tools/build-rules.mjs",
+    "build:seed": "node tools/generate-demo-data.mjs",
+    "build:data": "node tools/generate-opes-data.mjs",
+    "deploy": "firebase deploy --only database,hosting"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "5.0.2",
+    "firebase": "12.12.0",
+    "firebase-tools": "15.34.1"
+  }
+}

@@ -1,0 +1,28 @@
+/* =========================================================================
+   In biểu mẫu đánh giá – bố cục gần mẫu Excel BM KPI (A4 ngang)
+   ========================================================================= */
+@media print {
+  @page { size: A4 landscape; margin: 10mm 8mm; }
+  body { background: #fff; font-size: 10.5pt; color: #000; }
+  .sidebar, .header, .nav-scrim, .no-print, .action-bar, .toolbar, .breadcrumb, #toasts, .banner-stack, .modal-backdrop, .drawer, .drawer-backdrop { display: none !important; }
+  .shell { display: block; }
+  .content { padding: 0; }
+  .card { box-shadow: none; border: 0; }
+  .eval-sheet { border: 0; padding: 0; }
+  .table-wrap { overflow: visible !important; max-height: none !important; border: 0; }
+  table.sheet { font-size: 9pt; }
+  table.sheet th, table.sheet td { border-color: #555; padding: 3px 5px; }
+  table.sheet thead th { position: static; background: #e6e6e6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  table.sheet .clamp { -webkit-line-clamp: unset !important; display: block !important; }
+  table.sheet tr { page-break-inside: avoid; }
+  input, select, textarea { border: 0 !important; background: transparent !important; padding: 0 !important; min-height: 0 !important; box-shadow: none !important; -webkit-appearance: none; appearance: none; color: #000 !important; }
+  textarea { resize: none; overflow: visible; height: auto; }
+  .btn { display: none !important; }
+  .print-only { display: block !important; }
+  .part-title { page-break-after: avoid; }
+  .sign-grid { page-break-inside: avoid; }
+  .sign-box { min-height: 120px; border-color: #555; }
+  .kbi-level.self, .kbi-level.mgr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  a { color: #000; text-decoration: none; }
+}
+.print-only { display: none; }
